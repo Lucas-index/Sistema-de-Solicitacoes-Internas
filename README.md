@@ -1,122 +1,182 @@
 # Sistema de Solicitações Internas — README
 
-Este documento explica, de um jeito simples, como rodar o projeto, como conferir se tudo está funcionando, o que cada rota da API faz, e termina com uma pequena história que mostra o sistema em ação no dia a dia de uma empresa fictícia.
+Este é o guia principal do projeto. Ele explica como rodar as três partes do sistema, os comandos do dia a dia, o que cada rota faz, e termina com uma história mostrando tudo em ação.
+
+## Visão geral
+
+O projeto tem três partes, cada uma numa pasta própria, rodando ao mesmo tempo em terminais separados:
+
+| Pasta | O que é | Porta |
+|---|---|---|
+| `api` | Backend principal em Laravel — autenticação, chamados, aprovações, SLA | `8000` |
+| `python-service` | Serviço de relatórios em Python (FastAPI) — tempo médio, volume, recorrência | `8001` |
+| `frontend` | Interface em React (Vite) — telas de login, chamados e painéis | `5173` |
 
 ---
 
-## 1. Como iniciar o servidor
+## 1. Como iniciar os três servidores
 
-1. Abra o terminal do VS Code.
-2. Entre na pasta da API (onde está o arquivo `artisan`):
-   ```
-   cd api
-   ```
-3. Suba o servidor:
-   ```
-   php artisan serve
-   ```
-4. Quando aparecer a linha `INFO Server running on [http://127.0.0.1:8000]`, o sistema está no ar.
-5. Para desligar o servidor, aperte `Ctrl+C` no terminal onde ele está rodando.
+Você precisa de **três abas de terminal abertas ao mesmo tempo**, uma para cada serviço. Nenhuma delas pode ser fechada enquanto você estiver usando o sistema.
 
-**Importante:** enquanto esse terminal estiver com o servidor ligado, ele fica "ocupado" — não dá pra rodar outros comandos ali. Se precisar rodar outro comando (como migrations ou tinker), abra uma **nova aba de terminal** no VS Code, sem fechar a que está rodando o servidor.
+### Terminal 1 — API (Laravel)
+```
+cd api
+php artisan serve
+```
+Fica no ar em `http://127.0.0.1:8000`.
+
+### Terminal 2 — Relatórios (Python)
+```
+cd python-service
+venv\Scripts\activate
+uvicorn main:app --reload --port 8001
+```
+Fica no ar em `http://127.0.0.1:8001`. Se o ambiente virtual (`venv`) ainda não existir, veja a seção de comandos do Python mais abaixo.
+
+### Terminal 3 — Front-end (React)
+```
+cd frontend
+npm run dev
+```
+Fica no ar em `http://localhost:5173` — é esse endereço que você abre no navegador para usar o sistema.
+
+Para desligar qualquer um dos três, clique no terminal correspondente e aperte `Ctrl+C`.
 
 ---
 
-## 2. Como ver todas as rotas disponíveis
+## 2. Comandos principais (cheat sheet)
 
-Uma "rota" é cada caminho que a API entende. Para ver a lista completa de tudo que o sistema sabe fazer, rode (numa aba de terminal separada da do servidor):
+### Laravel (`api`)
 
-```
-php artisan route:list
-```
+| Comando | Para que serve |
+|---|---|
+| `php artisan serve` | Sobe o servidor da API |
+| `php artisan route:list` | Lista todas as rotas existentes |
+| `php artisan route:list --path=solicitacoes` | Lista só as rotas de um assunto específico |
+| `php artisan migrate` | Aplica migrations pendentes no banco |
+| `php artisan migrate:fresh` | Apaga **todas** as tabelas e recria vazias (cuidado, perde todos os dados) |
+| `php artisan tinker` | Abre um console interativo para consultar/editar o banco direto pelo Eloquent |
+| `php artisan make:model Nome -mcr` | Cria model + migration + controller de uma vez |
+| `php artisan make:migration nome_da_migration` | Cria uma migration nova |
+| `php artisan solicitacoes:verificar-sla` | Roda manualmente a verificação de chamados atrasados |
+| `php artisan optimize:clear` | Limpa cache de rotas, config e views (use quando algo "não atualiza" mesmo após editar o código) |
+| `composer dump-autoload` | Recarrega o mapeamento de classes do PHP (use após criar um arquivo novo que não está sendo encontrado) |
 
-Se quiser ver só as rotas relacionadas a um assunto específico, filtre pelo caminho:
+### Python (`python-service`)
 
-```
-php artisan route:list --path=solicitacoes
-php artisan route:list --path=notificacoes
-```
+| Comando | Para que serve |
+|---|---|
+| `python -m venv venv` | Cria o ambiente virtual (só na primeira vez) |
+| `venv\Scripts\activate` | Ativa o ambiente virtual (sempre que abrir um terminal novo aqui) |
+| `pip install fastapi uvicorn pymysql python-dotenv` | Instala as dependências (só na primeira vez, ou se as dependências mudarem) |
+| `uvicorn main:app --reload --port 8001` | Sobe o serviço de relatórios |
 
-Isso é útil sempre que uma requisição der erro "rota não encontrada" — a lista mostra exatamente quais rotas existem e com qual nome de parâmetro (por exemplo, `{solicitacao}`).
+### Front-end (`frontend`)
 
----
-
-## 3. Como verificar se uma solicitação está indo pela rota certa
-
-Passo a passo para investigar qualquer chamada que não se comporta como esperado:
-
-1. **Confira a URL exata.** Troque qualquer coisa entre chaves (como `{id}`) pelo número real do registro — chaves nunca devem aparecer na URL de verdade.
-2. **Confira o método HTTP.** `GET` é para consultar, `POST` é para criar ou executar uma ação (aprovar, rejeitar, etc.).
-3. **Rode `php artisan route:list --path=<parte-da-url>`** para confirmar que a rota existe e ver qual controller e método ela chama.
-4. **Confira os headers da requisição:**
-   - `Accept: application/json` (sem isso, erros de autenticação viram uma tela de erro em vez de JSON)
-   - `Authorization: Bearer {token}` (sem isso, ou com o token errado, a API responde "Unauthenticated")
-5. **Use o Tinker para inspecionar o banco diretamente**, se a resposta da API parecer estranha:
-   ```
-   php artisan tinker
-   ```
-   Dentro dele, por exemplo:
-   ```php
-   App\Models\Solicitacao::find(1)
-   ```
-   Isso mostra o registro real salvo no banco, sem passar pela API — útil para saber se o problema é no banco ou na camada da rota/controller.
-6. **Olhe o terminal do `php artisan serve`.** Toda requisição que chega aparece ali com o caminho e o tempo de resposta — é o primeiro lugar para confirmar que a chamada realmente chegou no servidor.
+| Comando | Para que serve |
+|---|---|
+| `npm install` | Instala as dependências (só na primeira vez, ou quando o `package.json` mudar) |
+| `npm run dev` | Sobe o servidor de desenvolvimento |
+| `npm run build` | Gera uma versão de produção otimizada (pasta `dist`) |
 
 ---
 
-## 4. Dicionário de rotas (explicado para quem não é da área técnica)
+## 3. Como verificar se uma requisição está indo pela rota certa
+
+1. **Confira a URL exata.** Troque qualquer coisa entre chaves (como `{id}`) pelo número real do registro — chaves nunca aparecem na URL de verdade.
+2. **Confira o método HTTP.** `GET` é para consultar, `POST` é para criar ou executar uma ação.
+3. **Rode `php artisan route:list --path=<parte-da-url>`** para confirmar que a rota existe e ver qual controller ela chama.
+4. **Confira os headers:** `Accept: application/json` e `Authorization: Bearer {token}` (para a API); `x-api-key` (para o serviço Python).
+5. **Use o Tinker** para ver o dado real no banco, sem passar pela API: `php artisan tinker`, depois `App\Models\Solicitacao::find(1)`.
+6. **No navegador, use o F12 (DevTools) → aba Network**, para ver exatamente qual chamada o front-end fez e o que veio de resposta — é o primeiro lugar a olhar quando uma tela do sistema não carrega.
+7. **Olhe o terminal de cada servidor.** Toda requisição que chega aparece ali — é como confirmar que a chamada realmente saiu do front-end e chegou no destino certo.
+
+---
+
+## 4. Dicionário de rotas — API (Laravel)
 
 ### Contas e login
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/register` | Cria uma conta nova no sistema (nome, e-mail, senha e papel: solicitante, aprovador, executor ou admin). |
-| `POST /api/login` | Entra com uma conta já existente e devolve uma "chave de acesso" (token) que precisa ser usada em todas as ações seguintes. |
-| `POST /api/logout` | Invalida a chave de acesso atual, como um "sair da conta". |
-| `GET /api/me` | Mostra os dados da pessoa que está logada no momento. |
+| `POST /api/register` | Cria uma conta nova (nome, e-mail, senha e papel: solicitante, aprovador, executor ou admin). Não existe tela para isso — é feito por comando, normalmente pelo RH. |
+| `POST /api/login` | Entra com uma conta já existente e devolve o token de acesso. |
+| `POST /api/logout` | Invalida o token atual. |
+| `GET /api/me` | Mostra os dados de quem está logado. |
 
-### Organização (setores e categorias)
-
-| Rota | O que faz |
-|---|---|
-| `POST /api/setores` | Cadastra um novo setor da empresa (ex: TI, RH, Manutenção). |
-| `GET /api/setores` | Lista todos os setores cadastrados. |
-| `POST /api/categorias` | Cadastra um tipo de solicitação (ex: "Solicitação de equipamento"), vinculado a um setor responsável e um prazo (SLA). |
-| `GET /api/categorias` | Lista todas as categorias cadastradas. |
-
-### Solicitações (o coração do sistema)
+### Organização
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/solicitacoes` | Abre um novo chamado/pedido. O sistema já descobre sozinho quem deve aprovar, com base na categoria escolhida. |
-| `GET /api/solicitacoes` | Lista os chamados que dizem respeito à pessoa logada (seja como quem pediu, quem aprova ou quem executa). |
-| `GET /api/solicitacoes/{id}` | Mostra todos os detalhes de um chamado específico: status atual, quem está envolvido, histórico completo, comentários e anexos. |
-| `POST /api/solicitacoes/{id}/aprovar` | O aprovador dá sinal verde para o chamado seguir em frente. |
-| `POST /api/solicitacoes/{id}/rejeitar` | O aprovador recusa o chamado, obrigatoriamente explicando o motivo. |
-| `POST /api/solicitacoes/{id}/executar` | Alguém da equipe responsável assume o chamado e começa a resolver. |
-| `POST /api/solicitacoes/{id}/concluir` | Quem está executando avisa que o trabalho foi finalizado. |
-| `POST /api/solicitacoes/{id}/cancelar` | Quem abriu o chamado desiste dele, mas só é possível antes de alguém começar a executar. |
-| `POST /api/solicitacoes/{id}/fechar` | Quem abriu o chamado confirma que está tudo certo e encerra definitivamente. |
+| `POST /api/setores` | Cadastra um setor da empresa (ex: TI, RH, Manutenção). |
+| `GET /api/setores` | Lista os setores cadastrados. |
+| `POST /api/categorias` | Cadastra um tipo de solicitação, vinculado a um setor responsável e um prazo (SLA, padrão 24h). |
+| `GET /api/categorias` | Lista as categorias cadastradas. |
+
+### Solicitações
+
+| Rota | O que faz |
+|---|---|
+| `POST /api/solicitacoes` | Abre um novo chamado. O aprovador é descoberto automaticamente pela categoria. |
+| `GET /api/solicitacoes` | Lista os chamados relacionados à pessoa logada. |
+| `GET /api/solicitacoes/{id}` | Detalhe completo de um chamado: status, histórico, comentários, anexos. |
+| `POST /api/solicitacoes/{id}/aprovar` | Aprova o chamado. |
+| `POST /api/solicitacoes/{id}/rejeitar` | Recusa o chamado (motivo obrigatório). |
+| `POST /api/solicitacoes/{id}/executar` | Alguém da equipe responsável assume o chamado. |
+| `POST /api/solicitacoes/{id}/concluir` | Marca o trabalho como finalizado. |
+| `POST /api/solicitacoes/{id}/cancelar` | O solicitante desiste do chamado (só antes da execução começar). |
+| `POST /api/solicitacoes/{id}/fechar` | O solicitante confirma e encerra de vez. |
 
 ### Comentários e anexos
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/solicitacoes/{id}/comentarios` | Adiciona uma mensagem/observação dentro de um chamado, como um chat. |
-| `GET /api/solicitacoes/{id}/comentarios` | Mostra todas as mensagens trocadas naquele chamado. |
-| `POST /api/solicitacoes/{id}/anexos` | Anexa um arquivo (foto, documento, nota fiscal) a um chamado. |
-| `GET /api/solicitacoes/{id}/anexos` | Lista os arquivos anexados naquele chamado. |
+| `POST /api/solicitacoes/{id}/comentarios` | Adiciona uma mensagem ao chamado. |
+| `GET /api/solicitacoes/{id}/comentarios` | Lista as mensagens do chamado. |
+| `POST /api/solicitacoes/{id}/anexos` | Anexa um arquivo ao chamado. |
+| `GET /api/solicitacoes/{id}/anexos` | Lista os arquivos anexados. |
 
 ### Notificações
 
 | Rota | O que faz |
 |---|---|
-| `GET /api/notificacoes` | Mostra os avisos automáticos que a pessoa logada recebeu (ex: "seu chamado foi aprovado"). |
-| `POST /api/notificacoes/{id}/marcar-lida` | Marca um aviso como já visto. |
+| `GET /api/notificacoes` | Lista os avisos automáticos da pessoa logada. |
+| `POST /api/notificacoes/{id}/marcar-lida` | Marca um aviso como visto. |
+
+### Relatórios (dentro do Laravel)
+
+| Rota | O que faz |
+|---|---|
+| `GET /api/relatorios/sla-estourado` | Lista chamados que passaram do prazo de aprovação (SLA). |
+| `GET /api/relatorios/pendentes` | Lista chamados aprovados esperando execução — é a fila de trabalho da manutenção. |
 
 ---
 
-## 5. A história: um dia na vida do sistema
+## 5. Dicionário de rotas — Serviço de relatórios (Python)
+
+Todas exigem o header `x-api-key` com o valor configurado no `.env` do `python-service`.
+
+| Rota | O que faz |
+|---|---|
+| `GET /relatorios/tempo-medio` | Tempo médio, em horas, para concluir um chamado, agrupado por categoria. |
+| `GET /relatorios/volume` | Quantidade de chamados por setor e por status. |
+| `GET /relatorios/recorrencia` | Palavras que se repetem em vários títulos de chamados, com a média de dias entre uma ocorrência e outra — ajuda a identificar o que está "quebrando" com mais frequência. |
+
+---
+
+## 6. Contas de teste
+
+| Pessoa | Papel | E-mail | Senha |
+|---|---|---|---|
+| Ana | Aprovadora (RH) | `ana@teste.com` | `123456` |
+| João | Solicitante (TI) | `joao@teste.com` | `123456` |
+| Carlos | Executor (Manutenção) | `carlos@teste.com` | `123456` |
+
+Cada uma cai numa tela inicial diferente ao logar no front-end: Ana no painel administrativo, João em "Meus chamados", Carlos na fila de execução.
+
+---
+
+## 7. A história: um dia na vida do sistema
 
 Para entender tudo isso na prática, imagine três colegas de trabalho:
 
@@ -126,30 +186,32 @@ Para entender tudo isso na prática, imagine três colegas de trabalho:
 
 ### Capítulo 1 — A cadeira quebrada
 
-João chega ao trabalho e percebe que sua cadeira está com um problema sério no encosto. Ele abre o sistema e registra um chamado (`POST /solicitacoes`): *"Cadeira quebrada, preciso de uma nova, prioridade alta"*. Nos bastidores, o sistema já sabe, pela categoria escolhida, que quem precisa dar o aval é alguém do RH — e encontra a Ana automaticamente.
+João chega ao trabalho e percebe que sua cadeira está com um problema sério no encosto. Ele abre o sistema e registra um chamado: *"Cadeira quebrada, preciso de uma nova, prioridade alta"*. Nos bastidores, o sistema já sabe, pela categoria escolhida, que quem precisa dar o aval é alguém do RH — e encontra a Ana automaticamente.
 
-Ana recebe o chamado na fila dela. Ela olha os detalhes e decide aprovar (`POST /solicitacoes/1/aprovar`). Na hora, o sistema registra essa decisão para sempre no histórico do chamado, e dispara um aviso pro João (`GET /notificacoes` do João já mostra: *"Sua solicitação foi aprovada"*).
+Ana recebe o chamado na fila dela. Ela olha os detalhes e decide aprovar. Na hora, o sistema registra essa decisão para sempre no histórico do chamado, e dispara um aviso pro João: *"Sua solicitação foi aprovada"*.
 
-Carlos, da manutenção, vê que tem um chamado aprovado esperando alguém pegar. Ele deixa um comentário avisando (`POST /solicitacoes/1/comentarios`): *"Vou providenciar amanhã de manhã"*, e assume o chamado (`POST /solicitacoes/1/executar`) — o status muda para "em execução", e o nome dele fica registrado como responsável.
+Carlos, da manutenção, vê que tem um chamado aprovado esperando alguém pegar — ele nem precisa procurar, a fila dele já mostra só isso. Ele deixa um comentário avisando: *"Vou providenciar amanhã de manhã"*, e assume o chamado — o status muda para "em execução", e o nome dele fica registrado como responsável.
 
-No dia seguinte, Carlos troca a cadeira, tira uma foto da nova cadeira instalada e anexa ao chamado (`POST /solicitacoes/1/anexos`) como comprovante. Em seguida, marca o trabalho como concluído (`POST /solicitacoes/1/concluir`).
+No dia seguinte, Carlos troca a cadeira, tira uma foto da nova cadeira instalada e anexa ao chamado como comprovante. Em seguida, marca o trabalho como concluído.
 
-João recebe o aviso, confere que a cadeira nova está lá, e fecha o chamado de vez (`POST /solicitacoes/1/fechar`). Fim feliz — e tudo o que aconteceu, do início ao fim, ficou guardado no histórico daquele chamado, como um diário completo.
+João recebe o aviso, confere que a cadeira nova está lá, e fecha o chamado de vez. Fim feliz — e tudo o que aconteceu, do início ao fim, ficou guardado no histórico daquele chamado, como um diário completo.
 
 ### Capítulo 2 — O computador que não liga mais
 
-Duas semanas depois, o computador de João simplesmente não liga mais. Ele abre um novo chamado (`POST /solicitacoes`): *"Computador queimou, preciso de um computador novo, prioridade alta"*.
+Duas semanas depois, o computador de João simplesmente não liga mais. Ele abre um novo chamado: *"Computador queimou, preciso de um computador novo, prioridade alta"*.
 
-Dessa vez, Ana olha o pedido e vê que não tem verba disponível naquele momento. Ela recusa o chamado (`POST /solicitacoes/2/rejeitar`), e o sistema exige que ela escreva o motivo: *"Fora do orçamento no momento"*. João recebe a notificação explicando exatamente por que seu pedido não foi pra frente — sem mistério, com justificativa registrada.
+Dessa vez, Ana olha o pedido e vê que não tem verba disponível naquele momento. Ela recusa o chamado, e o sistema exige que ela escreva o motivo: *"Fora do orçamento no momento"*. João recebe a notificação explicando exatamente por que seu pedido não foi pra frente — sem mistério, com justificativa registrada.
 
 ### Capítulo 3 — O teclado (e o mouse desconectado)
 
-Mais tarde, João percebe que algumas teclas do teclado não respondem. Ele abre um chamado (`POST /solicitacoes`): *"Teclado com defeito, algumas teclas não funcionam"*.
+Mais tarde, João percebe que algumas teclas do teclado não respondem. Ele abre um chamado: *"Teclado com defeito, algumas teclas não funcionam"*.
 
-Só que, minutos depois, ele descobre que na verdade era só o **mouse** que estava desconectado — e o teclado nunca teve problema nenhum. Como o chamado ainda está esperando aprovação e ninguém começou a mexer nele, João consegue simplesmente cancelar (`POST /solicitacoes/3/cancelar`) antes que a Ana perca tempo avaliando algo desnecessário.
+Só que, minutos depois, ele descobre que na verdade era só o **mouse** que estava desconectado — e o teclado nunca teve problema nenhum. Como o chamado ainda está esperando aprovação e ninguém começou a mexer nele, João consegue simplesmente cancelar antes que a Ana perca tempo avaliando algo desnecessário.
 
-Ele confere de novo o chamado (`GET /solicitacoes/3`) e confirma: status "cancelada", sem confusão nenhuma no meio do caminho.
+### Capítulo 4 — O chamado esquecido
+
+Num fim de semana prolongado, um chamado de prioridade baixa fica parado na fila da Ana por dias sem ninguém notar. Só que o sistema não esquece: passadas as 24 horas de prazo, ele mesmo percebe o atraso, marca o chamado como "SLA estourado" e avisa a Ana automaticamente. Quando ela volta a abrir o painel administrativo, o chamado já está destacado na aba de SLA — ninguém precisou lembrar dela manualmente.
 
 ---
 
-Essa é a espinha dorsal do sistema: cada ação de cada personagem vira uma chamada de API, cada chamada vira uma linha no histórico, e cada papel (solicitante, aprovador, executor) só consegue fazer exatamente o que faz sentido para ele fazer.
+Essa é a espinha dorsal do sistema: cada ação de cada personagem vira uma chamada de API, cada chamada vira uma linha no histórico, o sistema cobra a si mesmo quando algo demora demais, e cada papel só consegue fazer exatamente o que faz sentido para ele fazer.
