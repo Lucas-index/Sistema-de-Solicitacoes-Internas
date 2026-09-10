@@ -9,6 +9,10 @@ from fastapi import FastAPI, Header, HTTPException
 
 from database import get_connection
 
+import io
+import pandas as pd
+from fastapi.responses import StreamingResponse
+
 load_dotenv()
 
 app = FastAPI(title="Relatórios - Sistema de Solicitações Internas")
@@ -135,3 +139,43 @@ def recorrencia_e_deterioracao(x_api_key: str = Header(...)):
         })
 
     return sorted(resultado, key=lambda x: x["ocorrencias"], reverse=True)
+
+@app.get("/relatorios/exportar-excel")
+def exportar_excel(x_api_key: str = Header(...)):
+    verificar_api_key(x_api_key)
+
+    conn = get_connection()
+    try:
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                SELECT
+                    s.id, s.titulo, s.status, s.prioridade,
+                    c.nome AS categoria, st.nome AS setor,
+                    u.name AS solicitante, s.created_at, s.updated_at
+                FROM solicitacoes s
+                JOIN categorias c ON c.id = s.categoria_id
+                JOIN setores st ON st.id = c.setor_responsavel_id
+                JOIN users u ON u.id = s.usuario_id
+            """)
+            chamados = cursor.fetchall()
+    finally:
+        conn.close()
+
+    df_chamados = pd.DataFrame(chamados)
+    df_tempo_medio = pd.DataFrame(tempo_medio_resolucao(x_api_key))
+    df_volume = pd.DataFrame(volume_por_setor_status(x_api_key))
+    df_recorrencia = pd.DataFrame(recorrencia_e_deterioracao(x_api_key))
+
+    buffer = io.BytesIO()
+    with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
+        df_chamados.to_excel(writer, sheet_name="Chamados", index=False)
+        df_tempo_medio.to_excel(writer, sheet_name="Tempo medio", index=False)
+        df_volume.to_excel(writer, sheet_name="Volume", index=False)
+        df_recorrencia.to_excel(writer, sheet_name="Recorrencia", index=False)
+    buffer.seek(0)
+
+    return StreamingResponse(
+        buffer,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": "attachment; filename=relatorio_solicitacoes.xlsx"},
+    )

@@ -37,6 +37,18 @@ export default function PainelAdmin() {
       .finally(() => setCarregando(false));
   }, []);
 
+    async function baixarExcel() {
+    const resposta = await pythonApi.get('/relatorios/exportar-excel', { responseType: 'blob' });
+    const url = window.URL.createObjectURL(new Blob([resposta.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'relatorio_solicitacoes.xlsx');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  }
+
   const aguardandoAprovacao = chamados.filter((c) => c.status === 'pendente_aprovacao');
 
   return (
@@ -91,8 +103,15 @@ export default function PainelAdmin() {
         </div>
       )}
 
-      {!carregando && aba === 'relatorios' && (
+            {!carregando && aba === 'relatorios' && (
         <div className="relatorios">
+          <div className="relatorios-topo">
+            <p className="pagina-subtitulo" style={{ margin: 0 }}>
+              Os três relatórios abaixo, reunidos numa única planilha.
+            </p>
+            <button onClick={baixarExcel}>Baixar relatório em Excel</button>
+          </div>
+
           <div className="relatorio-bloco">
             <h2>Tempo médio de resolução</h2>
             <table className="tabela">
