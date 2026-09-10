@@ -2,6 +2,7 @@ import os
 import re
 from collections import defaultdict
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
@@ -11,6 +12,13 @@ from database import get_connection
 load_dotenv()
 
 app = FastAPI(title="Relatórios - Sistema de Solicitações Internas")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 STOPWORDS = {
     "de", "da", "do", "das", "dos", "a", "o", "as", "os", "um", "uma",
