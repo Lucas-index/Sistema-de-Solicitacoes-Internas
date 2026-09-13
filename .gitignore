@@ -1,0 +1,31 @@
+# Ambiente e segredos — NUNCA versionar
+.env
+api/.env
+python-service/.env
+frontend/.env
+
+# Laravel
+api/vendor/
+api/node_modules/
+api/storage/*.key
+api/storage/framework/cache/*
+api/storage/framework/sessions/*
+api/storage/framework/views/*
+api/storage/logs/*
+api/storage/app/public/anexos/*
+!api/storage/app/public/anexos/.gitkeep
+api/.phpunit.result.cache
+
+# Python
+python-service/venv/
+python-service/__pycache__/
+python-service/*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.vscode/

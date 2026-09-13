@@ -1,0 +1,76 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_USER: ${DB_USERNAME:-laravel}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-laravel}
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: laravel
+      DB_USERNAME: ${DB_USERNAME:-laravel}
+      DB_PASSWORD: ${DB_PASSWORD:-laravel}
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - api_storage:/var/www/html/storage/app/public
+
+  python-service:
+    build:
+      context: ./python-service
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: laravel
+      DB_USER: ${DB_USERNAME:-laravel}
+      DB_PASSWORD: ${DB_PASSWORD:-laravel}
+      SERVICE_API_KEY: ${PYTHON_API_KEY:-uma-chave-secreta-so-para-este-servico}
+    ports:
+      - "8001:8001"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8000/api
+        VITE_STORAGE_URL: http://localhost:8000/storage
+        VITE_PYTHON_API_URL: http://localhost:8001
+        VITE_PYTHON_API_KEY: ${PYTHON_API_KEY:-uma-chave-secreta-so-para-este-servico}
+    restart: unless-stopped
+    depends_on:
+      - api
+      - python-service
+    ports:
+      - "5173:80"
+
+volumes:
+  db_data:
+  api_storage:
