@@ -11,6 +11,7 @@ class Solicitacao extends Model
 protected $fillable = [
     'usuario_id', 'categoria_id', 'titulo', 'descricao',
     'prioridade', 'status', 'aprovador_id', 'executor_id', 'sla_estourado',
+    'model_version', 'classificacao_manual',
 ];
 
 public function usuario() { return $this->belongsTo(User::class, 'usuario_id'); }

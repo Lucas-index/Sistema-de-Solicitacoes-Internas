@@ -1,3 +1,6 @@
+import time
+import joblib
+from pydantic import BaseModel
 import os
 import re
 from collections import defaultdict
@@ -23,6 +26,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+MODEL_VERSION = "ticket-classifier-v1"
+
+vectorizer = joblib.load("modelo/vectorizer.joblib")
+modelo_categoria = joblib.load("modelo/categoria_modelo.joblib")
+modelo_prioridade = joblib.load("modelo/prioridade_modelo.joblib")
+
+
+class ChamadoParaClassificar(BaseModel):
+    ticket_id: int
+    title: str
+    description: str
+
 
 STOPWORDS = {
     "de", "da", "do", "das", "dos", "a", "o", "as", "os", "um", "uma",
@@ -140,6 +156,7 @@ def recorrencia_e_deterioracao(x_api_key: str = Header(...)):
 
     return sorted(resultado, key=lambda x: x["ocorrencias"], reverse=True)
 
+
 @app.get("/relatorios/exportar-excel")
 def exportar_excel(x_api_key: str = Header(...)):
     verificar_api_key(x_api_key)
@@ -179,3 +196,30 @@ def exportar_excel(x_api_key: str = Header(...)):
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": "attachment; filename=relatorio_solicitacoes.xlsx"},
     )
+
+
+@app.post("/classificar")
+def classificar(dados: ChamadoParaClassificar, x_api_key: str = Header(...)):
+    verificar_api_key(x_api_key)
+
+    inicio = time.perf_counter()
+
+    texto = f"{dados.title}. {dados.description}"
+    texto_vetorizado = vectorizer.transform([texto])
+
+    categoria_prevista = modelo_categoria.predict(texto_vetorizado)[0]
+    categoria_confianca = max(modelo_categoria.predict_proba(texto_vetorizado)[0])
+
+    prioridade_prevista = modelo_prioridade.predict(texto_vetorizado)[0]
+    prioridade_confianca = max(modelo_prioridade.predict_proba(texto_vetorizado)[0])
+
+    tempo_processamento_ms = round((time.perf_counter() - inicio) * 1000)
+
+    return {
+        "category": categoria_prevista,
+        "priority": prioridade_prevista,
+        "category_confidence": round(float(categoria_confianca), 3),
+        "priority_confidence": round(float(prioridade_confianca), 3),
+        "model_version": MODEL_VERSION,
+        "processing_time_ms": tempo_processamento_ms,
+    }

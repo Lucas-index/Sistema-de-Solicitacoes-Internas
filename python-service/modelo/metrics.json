@@ -1,0 +1,97 @@
+{
+  "model_version": "ticket-classifier-v1",
+  "trained_at": "2026-09-19T00:32:28.516677+00:00",
+  "dataset_size": 330,
+  "categoria": {
+    "algorithm": "LogisticRegression",
+    "accuracy": 1.0,
+    "report": {
+      "Acesso": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 11.0
+      },
+      "Hardware": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 11.0
+      },
+      "Manutenção": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 11.0
+      },
+      "RH": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 11.0
+      },
+      "Rede": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 11.0
+      },
+      "Software": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 11.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 66.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 66.0
+      }
+    }
+  },
+  "prioridade": {
+    "algorithm": "LogisticRegression",
+    "accuracy": 1.0,
+    "report": {
+      "alta": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 27.0
+      },
+      "baixa": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 17.0
+      },
+      "media": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 22.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 66.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 66.0
+      }
+    }
+  }
+}

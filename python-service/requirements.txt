@@ -4,3 +4,5 @@ pymysql
 python-dotenv
 pandas
 openpyxl
+scikit-learn
+joblib

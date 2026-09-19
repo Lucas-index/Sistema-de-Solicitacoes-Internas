@@ -1,0 +1,331 @@
+titulo,descricao,categoria,prioridade
+A cadeira da minha estação urgente,Alguém pode olhar isso? A porta da entrada está com vazamento e alagando o corredor.,Manutenção,alta
+O monitor da minha mesa com problema,A estação de trabalho a bateria não dura mais como antes.,Hardware,media
+Meu contracheque pequeno ajuste,Preciso de ajuda. Meu atestado gostaria de agendar minhas férias para o próximo trimestre.,RH,baixa
+A estação de trabalho apresentando falha,Preciso de ajuda. O mouse a bateria não dura mais como antes.,Hardware,media
+O vaso sanitário do banheiro com problema,"Por favor, verifiquem. O elevador está fazendo um barulho estranho há dois dias.",Manutenção,media
+A rede cabeada urgente,Alguém pode olhar isso? A rede interna está fora do ar há mais de uma hora.,Rede,alta
+Meu crachá de acesso instável,"Por favor, verifiquem. Meu e-mail corporativo não consigo acessar uma pasta específica que preciso.",Acesso,media
+A lâmpada da minha mesa não funciona,Alguém pode olhar isso? O ar-condicionado da sala parou de funcionar e está fazendo muito calor na sala toda.,Manutenção,alta
+O teclado urgente,O monitor da minha mesa está fazendo um barulho estranho e desligando sozinho.,Hardware,alta
+Meu plano de saúde apresentando falha,Meu holerite preciso entender uma cobrança que apareceu.,RH,media
+A rede cabeada quando possível,"Alguém pode olhar isso? A rede interna o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+O antivírus parou de funcionar,Alguém pode olhar isso? O sistema de rh não consigo emitir nenhuma nota fiscal desde hoje cedo.,Software,alta
+Minhas férias parou de funcionar,Alguém pode olhar isso? Minhas férias preciso da segunda via urgente para 30 minutos.,RH,alta
+Meu login instável,Preciso de ajuda. Meu acesso ao servidor não consigo acessar uma pasta específica que preciso.,Acesso,media
+A webcam sugestão,"Preciso de ajuda. Meu computador está com um risco na tela, só estética mesmo.",Hardware,baixa
+O sistema financeiro parou de funcionar,"Por favor, verifiquem. O sistema de ponto trava a tela toda vez que abro o relatório.",Software,alta
+Meu crachá de acesso sugestão,Preciso de ajuda. Meu e-mail corporativo gostaria de solicitar acesso a mais uma pasta compartilhada.,Acesso,baixa
+O nobreak parou de funcionar,"Por favor, verifiquem. O monitor da minha mesa quebrou completamente e não consigo trabalhar.",Hardware,alta
+Meu usuário urgente,"Meu e-mail corporativo não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O excel com problema,"Por favor, verifiquem. O teams de vez em quando fecha sozinho sem aviso.",Software,media
+O teclado parou de funcionar,O hd externo quebrou completamente e não consigo trabalhar.,Hardware,alta
+O elevador com problema,"Por favor, verifiquem. A torneira da copa está fazendo um barulho estranho há dois dias.",Manutenção,media
+O sistema de ponto não funciona,O antivírus não consigo emitir nenhuma nota fiscal desde hoje cedo.,Software,alta
+O teclado pequeno ajuste,Preciso de ajuda. A webcam gostaria de um mouse sem fio para substituir o com fio.,Hardware,baixa
+Meu plano de saúde sugestão,"Alguém pode olhar isso? Meu benefício gostaria da segunda via, mas sem pressa.",RH,baixa
+O headset instável,O teclado às vezes trava e precisa reiniciar.,Hardware,media
+Minhas férias com problema,"Por favor, verifiquem. Meu vale-transporte preciso entender uma cobrança que apareceu.",RH,media
+Minha conta não funciona,"Por favor, verifiquem. Meu usuário foi bloqueado e preciso urgente para uma entrega em 1 hora.",Acesso,alta
+A webcam instável,A webcam está muito lento desde ontem.,Hardware,media
+O programa de vendas sugestão,"Preciso de ajuda. O sistema interno tem um botão que não faz nada, acho que é um bug pequeno.",Software,baixa
+Meu benefício não funciona,Alguém pode olhar isso? Meu vale-transporte não recebi o pagamento desse mês e preciso resolver hoje.,RH,alta
+O sinal do wi-fi da sala de reunião parou de funcionar,"Alguém pode olhar isso? A internet não conecta de jeito nenhum, preciso urgente para uma reunião em hoje à tarde.",Rede,alta
+Meu holerite instável,Minhas férias está com um valor errado esse mês.,RH,media
+Meu atestado urgente,Preciso de ajuda. Meu plano de saúde preciso da segunda via urgente para hoje à tarde.,RH,alta
+Meu acesso ao sistema urgente,Meu e-mail corporativo está travado e tenho uma reunião importante em 2 horas.,Acesso,alta
+O ar-condicionado da sala sugestão,"Por favor, verifiquem. O ar-condicionado da sala de reuniões gostaria de agendar uma manutenção preventiva quando possível.",Manutenção,baixa
+O ar-condicionado da sala quando possível,O ar-condicionado da sala de reuniões poderia dar uma olhada quando tiver uma folga na agenda.,Manutenção,baixa
+A rede cabeada com problema,"Preciso de ajuda. O wi-fi está caindo o dia todo, de tempos em tempos.",Rede,media
+O ar-condicionado da sala instável,"A torneira da copa não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+A rede cabeada parou de funcionar,O sinal do wi-fi da sala de reunião caiu completamente e ninguém do setor consegue trabalhar.,Rede,alta
+Meu holerite com problema,Preciso de ajuda. Meu atestado está com um valor errado esse mês.,RH,media
+Minha conta com problema,"Preciso de ajuda. Minha senha está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+Meu benefício urgente,Alguém pode olhar isso? Meu vale-transporte não recebi o pagamento desse mês e preciso resolver hoje.,RH,alta
+A porta da entrada parou de funcionar,"Por favor, verifiquem. O vaso sanitário do banheiro está com vazamento e alagando o corredor.",Manutenção,alta
+O wi-fi sugestão,"Por favor, verifiquem. A rede cabeada o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+A rede interna com problema,A rede interna a VPN desconecta sozinha a cada meia hora.,Rede,media
+Meu vale-transporte instável,"Meu benefício não chegou ainda, já passou do prazo normal.",RH,media
+A cadeira da minha estação não funciona,Alguém pode olhar isso? O ar-condicionado da sala parou de funcionar e está fazendo muito calor na sala toda.,Manutenção,alta
+Meu acesso ao sistema sugestão,"Alguém pode olhar isso? Minha conta queria trocar minha senha por segurança, sem urgência.",Acesso,baixa
+Meu benefício com problema,Meu plano de saúde preciso entender uma cobrança que apareceu.,RH,media
+O sinal do wi-fi da sala de reunião apresentando falha,Preciso de ajuda. A rede cabeada está muito lenta desde essa manhã.,Rede,media
+Meu atestado não funciona,Preciso de ajuda. Meu vale-refeição não recebi o pagamento desse mês e preciso resolver hoje.,RH,alta
+Meu e-mail corporativo quando possível,Preciso de ajuda. Meu login gostaria de solicitar acesso a mais uma pasta compartilhada.,Acesso,baixa
+Meu vale-refeição apresentando falha,Preciso de ajuda. Meu atestado está com um valor errado esse mês.,RH,media
+O erp sugestão,"Por favor, verifiquem. O excel queria sugerir uma melhoria na tela inicial.",Software,baixa
+O sistema financeiro com problema,Preciso de ajuda. O sistema de rh está demorando muito mais que o normal para carregar.,Software,media
+O sistema de rh quando possível,Preciso de ajuda. O outlook queria sugerir uma melhoria na tela inicial.,Software,baixa
+O sistema de ponto não funciona,O excel trava a tela toda vez que abro o relatório.,Software,alta
+O mouse apresentando falha,O hd externo está esquentando muito mais que o normal.,Hardware,media
+A webcam com problema,O nobreak a tela está piscando de vez em quando.,Hardware,media
+O programa de emissão de nota fiscal quando possível,"O excel tem um botão que não faz nada, acho que é um bug pequeno.",Software,baixa
+A cadeira da minha estação instável,O vaso sanitário do banheiro está fazendo um barulho estranho há dois dias.,Manutenção,media
+Meu usuário quando possível,Preciso de ajuda. Meu e-mail corporativo preciso que adicionem meu acesso ao grupo do setor.,Acesso,baixa
+A internet com problema,"Alguém pode olhar isso? O sinal do wi-fi da sala de reunião está caindo o dia todo, de tempos em tempos.",Rede,media
+A torneira da copa apresentando falha,"Por favor, verifiquem. A mesa da recepção está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+Meu vale-transporte com problema,Meu holerite está com um valor errado esse mês.,RH,media
+O ar-condicionado da sala urgente,"A cadeira da minha estação quebrou completamente e está causando risco, preciso urgente.",Manutenção,alta
+O ar-condicionado da sala de reuniões urgente,"Preciso de ajuda. O vaso sanitário do banheiro quebrou completamente e está causando risco, preciso urgente.",Manutenção,alta
+Meu atestado pequeno ajuste,"Meu benefício gostaria da segunda via, mas sem pressa.",RH,baixa
+O sinal do wi-fi da sala de reunião parou de funcionar,A rede interna está impedindo o acesso ao sistema financeiro para todo o time.,Rede,alta
+O programa de emissão de nota fiscal não funciona,"Preciso de ajuda. O erp não abre de forma nenhuma, aparece uma tela branca.",Software,alta
+A torneira da copa apresentando falha,Alguém pode olhar isso? A porta da entrada está fazendo um barulho estranho há dois dias.,Manutenção,media
+O sinal do wi-fi da sala de reunião apresentando falha,"A conexão do escritório está caindo o dia todo, de tempos em tempos.",Rede,media
+O sistema financeiro apresentando falha,O excel não está sincronizando os dados corretamente.,Software,media
+O ar-condicionado da sala de reuniões apresentando falha,"O ar-condicionado da sala está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+A rede cabeada sugestão,"A conexão do escritório o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+A rede do terceiro andar apresentando falha,A internet está muito lenta desde essa manhã.,Rede,media
+O elevador apresentando falha,"Alguém pode olhar isso? O elevador está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+Meu usuário urgente,Meu acesso ao sistema foi bloqueado e preciso urgente para uma entrega em 2 horas.,Acesso,alta
+O sinal do wi-fi da sala de reunião urgente,O wi-fi está impedindo o acesso ao sistema financeiro para todo o time.,Rede,alta
+O outlook com problema,Preciso de ajuda. O erp está demorando muito mais que o normal para carregar.,Software,media
+O carregador do notebook sugestão,"O teclado fez um barulho diferente hoje de manhã, mas continua funcionando.",Hardware,baixa
+O sistema de ponto instável,Alguém pode olhar isso? O programa de emissão de nota fiscal de vez em quando fecha sozinho sem aviso.,Software,media
+Meu e-mail corporativo instável,Alguém pode olhar isso? Meu acesso ao servidor esqueci a senha e preciso resetar.,Acesso,media
+A porta da entrada quando possível,"Alguém pode olhar isso? O ar-condicionado da sala de reuniões está com um pequeno desgaste, nada urgente.",Manutenção,baixa
+O nobreak apresentando falha,O mouse a tela está piscando de vez em quando.,Hardware,media
+O monitor da minha mesa urgente,Alguém pode olhar isso? A impressora do setor não liga de jeito nenhum e tenho uma apresentação em 30 minutos.,Hardware,alta
+Meu e-mail corporativo apresentando falha,Alguém pode olhar isso? Meu acesso ao servidor esqueci a senha e preciso resetar.,Acesso,media
+O ar-condicionado da sala instável,Alguém pode olhar isso? O ar-condicionado da sala está fazendo um barulho estranho há dois dias.,Manutenção,media
+Meu atestado quando possível,"Por favor, verifiquem. Meu contracheque queria tirar uma dúvida sobre como funciona o benefício.",RH,baixa
+O sistema de rh sugestão,"Alguém pode olhar isso? O teams tem um botão que não faz nada, acho que é um bug pequeno.",Software,baixa
+O ar-condicionado da sala quando possível,"Por favor, verifiquem. O elevador gostaria de agendar uma manutenção preventiva quando possível.",Manutenção,baixa
+O carregador do notebook instável,Preciso de ajuda. O mouse a bateria não dura mais como antes.,Hardware,media
+Meu notebook urgente,Preciso de ajuda. Meu computador está soltando fumaça e cheiro de queimado.,Hardware,alta
+O ar-condicionado da sala de reuniões quando possível,"Por favor, verifiquem. A porta da entrada gostaria de agendar uma manutenção preventiva quando possível.",Manutenção,baixa
+Meu plano de saúde instável,Meu vale-transporte preciso entender uma cobrança que apareceu.,RH,media
+Meu crachá de acesso apresentando falha,"Alguém pode olhar isso? Meu acesso ao servidor está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+O excel não funciona,O programa de vendas não consigo emitir nenhuma nota fiscal desde hoje cedo.,Software,alta
+Meu login instável,"Meu acesso ao sistema está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+Minha senha instável,Meu acesso ao servidor esqueci a senha e preciso resetar.,Acesso,media
+O programa de emissão de nota fiscal quando possível,"O outlook tem um botão que não faz nada, acho que é um bug pequeno.",Software,baixa
+Minha conta instável,"Por favor, verifiquem. Meu crachá de acesso está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+A rede cabeada pequeno ajuste,"Alguém pode olhar isso? A rede cabeada o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+O monitor da minha mesa não funciona,"Por favor, verifiquem. O headset quebrou completamente e não consigo trabalhar.",Hardware,alta
+Minha conta pequeno ajuste,"Por favor, verifiquem. Meu crachá de acesso gostaria de solicitar acesso a mais uma pasta compartilhada.",Acesso,baixa
+O sistema financeiro apresentando falha,O antivírus não está sincronizando os dados corretamente.,Software,media
+A webcam apresentando falha,"Por favor, verifiquem. Meu notebook a bateria não dura mais como antes.",Hardware,media
+Meu atestado com problema,Preciso de ajuda. Meu atestado está com um valor errado esse mês.,RH,media
+O sistema interno apresentando falha,"Por favor, verifiquem. O outlook não está sincronizando os dados corretamente.",Software,media
+O teclado pequeno ajuste,"Preciso de ajuda. Meu computador fez um barulho diferente hoje de manhã, mas continua funcionando.",Hardware,baixa
+O erp apresentando falha,O navegador não está sincronizando os dados corretamente.,Software,media
+Meu benefício apresentando falha,"Meu vale-refeição não chegou ainda, já passou do prazo normal.",RH,media
+Minha conta apresentando falha,Preciso de ajuda. Meu e-mail corporativo esqueci a senha e preciso resetar.,Acesso,media
+Meu login urgente,"Meu e-mail corporativo não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O sistema de ponto urgente,Alguém pode olhar isso? O programa de vendas está apagando os dados que eu digito antes de salvar.,Software,alta
+Meu login instável,"Alguém pode olhar isso? Meu e-mail corporativo está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+A vpn instável,"Alguém pode olhar isso? A vpn está caindo o dia todo, de tempos em tempos.",Rede,media
+O headset pequeno ajuste,Preciso de ajuda. O mouse gostaria de um mouse sem fio para substituir o com fio.,Hardware,baixa
+O sinal do wi-fi da sala de reunião instável,"Por favor, verifiquem. A internet está muito lenta desde essa manhã.",Rede,media
+A cadeira da minha estação urgente,O elevador está com vazamento e alagando o corredor.,Manutenção,alta
+O antivírus parou de funcionar,O programa de vendas trava a tela toda vez que abro o relatório.,Software,alta
+O monitor da minha mesa com problema,O nobreak está esquentando muito mais que o normal.,Hardware,media
+O teclado com problema,O teclado a bateria não dura mais como antes.,Hardware,media
+Minha conta com problema,"Meu acesso ao sistema está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+A cadeira da minha estação quando possível,"Por favor, verifiquem. A mesa da recepção está com um pequeno desgaste, nada urgente.",Manutenção,baixa
+Meu usuário quando possível,Preciso de ajuda. Meu acesso ao servidor gostaria de solicitar acesso a mais uma pasta compartilhada.,Acesso,baixa
+A lâmpada da minha mesa parou de funcionar,"Por favor, verifiquem. O elevador parou de funcionar e está fazendo muito calor na sala toda.",Manutenção,alta
+A torneira da copa apresentando falha,Preciso de ajuda. O elevador está fazendo um barulho estranho há dois dias.,Manutenção,media
+Minha conta não funciona,"Alguém pode olhar isso? Minha senha não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+A lâmpada da minha mesa pequeno ajuste,"Por favor, verifiquem. A porta da entrada está com um pequeno desgaste, nada urgente.",Manutenção,baixa
+A vpn não funciona,Preciso de ajuda. A conexão do escritório caiu completamente e ninguém do setor consegue trabalhar.,Rede,alta
+A impressora do setor instável,Preciso de ajuda. O mouse está muito lento desde ontem.,Hardware,media
+O elevador apresentando falha,"Por favor, verifiquem. O ar-condicionado da sala não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+Meu login quando possível,Alguém pode olhar isso? Meu crachá de acesso gostaria de solicitar acesso a mais uma pasta compartilhada.,Acesso,baixa
+O sistema interno não funciona,"Por favor, verifiquem. O erp está apagando os dados que eu digito antes de salvar.",Software,alta
+A rede cabeada instável,Alguém pode olhar isso? A conexão do escritório está muito lenta desde essa manhã.,Rede,media
+A mesa da recepção com problema,"O elevador está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+A rede interna apresentando falha,Preciso de ajuda. A vpn está muito lenta desde essa manhã.,Rede,media
+Minhas férias instável,Alguém pode olhar isso? Meu holerite está com um valor errado esse mês.,RH,media
+Minha senha sugestão,Meu e-mail corporativo preciso que adicionem meu acesso ao grupo do setor.,Acesso,baixa
+Meu acesso ao servidor urgente,"Meu acesso ao sistema não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O programa de vendas sugestão,Alguém pode olhar isso? O sistema de ponto queria sugerir uma melhoria na tela inicial.,Software,baixa
+A internet urgente,Alguém pode olhar isso? A rede interna caiu completamente e ninguém do setor consegue trabalhar.,Rede,alta
+A lâmpada da minha mesa com problema,"Preciso de ajuda. A porta da entrada não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+A vpn urgente,A rede cabeada está fora do ar há mais de uma hora.,Rede,alta
+O erp com problema,Preciso de ajuda. O excel apareceu uma mensagem de erro que eu não entendo.,Software,media
+Meu plano de saúde com problema,Preciso de ajuda. Meu plano de saúde preciso entender uma cobrança que apareceu.,RH,media
+O sistema de rh urgente,"Alguém pode olhar isso? O sistema interno não abre de forma nenhuma, aparece uma tela branca.",Software,alta
+O elevador pequeno ajuste,"A porta da entrada está com um pequeno desgaste, nada urgente.",Manutenção,baixa
+Meu contracheque apresentando falha,"Por favor, verifiquem. Meu benefício preciso entender uma cobrança que apareceu.",RH,media
+Meu acesso ao servidor com problema,"Por favor, verifiquem. Meu crachá de acesso não consigo acessar uma pasta específica que preciso.",Acesso,media
+Meu vale-refeição apresentando falha,"Meu vale-transporte não chegou ainda, já passou do prazo normal.",RH,media
+A webcam pequeno ajuste,Preciso de ajuda. A estação de trabalho gostaria de um mouse sem fio para substituir o com fio.,Hardware,baixa
+Meu acesso ao servidor parou de funcionar,Alguém pode olhar isso? Meu login foi bloqueado e preciso urgente para uma entrega em hoje à tarde.,Acesso,alta
+Meu vale-refeição quando possível,Meu holerite queria tirar uma dúvida sobre como funciona o benefício.,RH,baixa
+O ar-condicionado da sala de reuniões sugestão,"Por favor, verifiquem. A cadeira da minha estação gostaria de agendar uma manutenção preventiva quando possível.",Manutenção,baixa
+Meu acesso ao sistema parou de funcionar,Preciso de ajuda. Meu usuário está travado e tenho uma reunião importante em 1 hora.,Acesso,alta
+O programa de emissão de nota fiscal sugestão,"Por favor, verifiquem. O sistema interno poderia ganhar uma atualização, está com a versão bem antiga.",Software,baixa
+A cadeira da minha estação quando possível,Preciso de ajuda. A mesa da recepção poderia dar uma olhada quando tiver uma folga na agenda.,Manutenção,baixa
+O sistema de ponto com problema,"Por favor, verifiquem. O sistema interno não está sincronizando os dados corretamente.",Software,media
+O sistema de ponto com problema,"Por favor, verifiquem. O erp de vez em quando fecha sozinho sem aviso.",Software,media
+Meu notebook não funciona,O carregador do notebook caiu no chão e agora não liga mais.,Hardware,alta
+Meu acesso ao servidor parou de funcionar,"Por favor, verifiquem. Minha conta foi bloqueado e preciso urgente para uma entrega em hoje à tarde.",Acesso,alta
+Minha senha parou de funcionar,"Por favor, verifiquem. Meu usuário não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O carregador do notebook quando possível,"Meu notebook fez um barulho diferente hoje de manhã, mas continua funcionando.",Hardware,baixa
+O ar-condicionado da sala parou de funcionar,"Por favor, verifiquem. A torneira da copa está com vazamento e alagando o corredor.",Manutenção,alta
+Meu contracheque apresentando falha,"Alguém pode olhar isso? Meu contracheque não chegou ainda, já passou do prazo normal.",RH,media
+Meu vale-transporte parou de funcionar,Meu benefício meu plano de saúde foi cancelado sem explicação e tenho consulta em hoje à tarde.,RH,alta
+Meu vale-transporte não funciona,"Por favor, verifiquem. Meu atestado preciso da segunda via urgente para 2 horas.",RH,alta
+Meu e-mail corporativo parou de funcionar,"Meu acesso ao servidor não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O elevador parou de funcionar,"Por favor, verifiquem. A torneira da copa parou de funcionar e está fazendo muito calor na sala toda.",Manutenção,alta
+O ar-condicionado da sala de reuniões instável,"A torneira da copa está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+O vaso sanitário do banheiro sugestão,O elevador gostaria de agendar uma manutenção preventiva quando possível.,Manutenção,baixa
+A rede interna parou de funcionar,"Por favor, verifiquem. A vpn está fora do ar há mais de uma hora.",Rede,alta
+Meu computador sugestão,"Meu notebook está com um risco na tela, só estética mesmo.",Hardware,baixa
+A vpn quando possível,"O wi-fi o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+O erp apresentando falha,Preciso de ajuda. O sistema de rh de vez em quando fecha sozinho sem aviso.,Software,media
+Meu atestado urgente,"Por favor, verifiquem. Meu vale-refeição não recebi o pagamento desse mês e preciso resolver hoje.",RH,alta
+Meu usuário sugestão,"Por favor, verifiquem. Meu login preciso que adicionem meu acesso ao grupo do setor.",Acesso,baixa
+O vaso sanitário do banheiro instável,"A cadeira da minha estação não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+O hd externo com problema,Preciso de ajuda. O monitor da minha mesa a tela está piscando de vez em quando.,Hardware,media
+O erp com problema,O sistema interno de vez em quando fecha sozinho sem aviso.,Software,media
+A vpn instável,"Por favor, verifiquem. A rede cabeada está caindo o dia todo, de tempos em tempos.",Rede,media
+A mesa da recepção com problema,A mesa da recepção está fazendo um barulho estranho há dois dias.,Manutenção,media
+A rede cabeada quando possível,"A rede interna o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+Minha conta urgente,Meu login está travado e tenho uma reunião importante em hoje à tarde.,Acesso,alta
+A porta da entrada apresentando falha,"Por favor, verifiquem. A torneira da copa está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+O teams instável,"Por favor, verifiquem. O sistema de rh de vez em quando fecha sozinho sem aviso.",Software,media
+Meu acesso ao sistema apresentando falha,"Alguém pode olhar isso? Meu acesso ao sistema está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+O outlook com problema,Preciso de ajuda. O programa de vendas está demorando muito mais que o normal para carregar.,Software,media
+Meu holerite não funciona,Meu vale-refeição meu plano de saúde foi cancelado sem explicação e tenho consulta em 30 minutos.,RH,alta
+O programa de emissão de nota fiscal urgente,Alguém pode olhar isso? O sistema interno está apagando os dados que eu digito antes de salvar.,Software,alta
+O programa de emissão de nota fiscal instável,O sistema de ponto está demorando muito mais que o normal para carregar.,Software,media
+Meu plano de saúde pequeno ajuste,"Meu benefício gostaria da segunda via, mas sem pressa.",RH,baixa
+A conexão do escritório pequeno ajuste,"A vpn está um pouco instável, mas ainda dá para trabalhar.",Rede,baixa
+O headset urgente,A webcam quebrou completamente e não consigo trabalhar.,Hardware,alta
+A mesa da recepção não funciona,"Por favor, verifiquem. A mesa da recepção quebrou completamente e está causando risco, preciso urgente.",Manutenção,alta
+O ar-condicionado da sala instável,"Preciso de ajuda. O ar-condicionado da sala está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+A estação de trabalho não funciona,Alguém pode olhar isso? A estação de trabalho caiu no chão e agora não liga mais.,Hardware,alta
+A rede do terceiro andar apresentando falha,"Por favor, verifiquem. A rede cabeada está caindo o dia todo, de tempos em tempos.",Rede,media
+O vaso sanitário do banheiro não funciona,"Por favor, verifiquem. O vaso sanitário do banheiro parou de funcionar e está fazendo muito calor na sala toda.",Manutenção,alta
+Meu login com problema,"Por favor, verifiquem. Minha senha não consigo acessar uma pasta específica que preciso.",Acesso,media
+A rede interna com problema,A internet está muito lenta desde essa manhã.,Rede,media
+O vaso sanitário do banheiro parou de funcionar,"A mesa da recepção quebrou completamente e está causando risco, preciso urgente.",Manutenção,alta
+Meu e-mail corporativo sugestão,"Meu login queria trocar minha senha por segurança, sem urgência.",Acesso,baixa
+O nobreak com problema,Preciso de ajuda. A webcam às vezes trava e precisa reiniciar.,Hardware,media
+O sistema de rh instável,"Por favor, verifiquem. O outlook está demorando muito mais que o normal para carregar.",Software,media
+A internet apresentando falha,Preciso de ajuda. A internet está muito lenta desde essa manhã.,Rede,media
+O hd externo apresentando falha,Alguém pode olhar isso? A impressora do setor às vezes trava e precisa reiniciar.,Hardware,media
+Meu atestado sugestão,"Por favor, verifiquem. Meu atestado gostaria de agendar minhas férias para o próximo trimestre.",RH,baixa
+Meu acesso ao sistema não funciona,"Alguém pode olhar isso? Meu e-mail corporativo não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O teclado sugestão,Preciso de ajuda. O nobreak gostaria de um mouse sem fio para substituir o com fio.,Hardware,baixa
+O sistema de ponto sugestão,"Alguém pode olhar isso? O outlook poderia ganhar uma atualização, está com a versão bem antiga.",Software,baixa
+Meu atestado sugestão,Minhas férias queria tirar uma dúvida sobre como funciona o benefício.,RH,baixa
+Minhas férias não funciona,Alguém pode olhar isso? Meu vale-transporte não recebi o pagamento desse mês e preciso resolver hoje.,RH,alta
+O antivírus com problema,"Por favor, verifiquem. O programa de vendas não está sincronizando os dados corretamente.",Software,media
+A conexão do escritório sugestão,"Alguém pode olhar isso? A conexão do escritório o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+O nobreak urgente,"Por favor, verifiquem. Meu notebook está fazendo um barulho estranho e desligando sozinho.",Hardware,alta
+O antivírus quando possível,O sistema financeiro queria sugerir uma melhoria na tela inicial.,Software,baixa
+Meu atestado sugestão,Meu vale-refeição queria tirar uma dúvida sobre como funciona o benefício.,RH,baixa
+O carregador do notebook com problema,"Por favor, verifiquem. Meu computador a tela está piscando de vez em quando.",Hardware,media
+Minha conta apresentando falha,"Minha senha está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+Meu benefício com problema,Preciso de ajuda. Meu atestado preciso entender uma cobrança que apareceu.,RH,media
+A rede interna instável,O sinal do wi-fi da sala de reunião a VPN desconecta sozinha a cada meia hora.,Rede,media
+Minhas férias com problema,Alguém pode olhar isso? Meu vale-transporte preciso entender uma cobrança que apareceu.,RH,media
+A vpn pequeno ajuste,"Preciso de ajuda. A rede cabeada o sinal chega fraco no fundo da sala, gostaria de melhorar.",Rede,baixa
+A webcam não funciona,Preciso de ajuda. Meu notebook caiu no chão e agora não liga mais.,Hardware,alta
+A rede interna apresentando falha,Preciso de ajuda. A rede do terceiro andar a VPN desconecta sozinha a cada meia hora.,Rede,media
+A conexão do escritório sugestão,"A vpn está um pouco instável, mas ainda dá para trabalhar.",Rede,baixa
+A vpn instável,"Alguém pode olhar isso? A rede interna está caindo o dia todo, de tempos em tempos.",Rede,media
+A porta da entrada apresentando falha,"A torneira da copa não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+Meu atestado com problema,"Preciso de ajuda. Meu benefício não chegou ainda, já passou do prazo normal.",RH,media
+O teclado apresentando falha,O mouse está muito lento desde ontem.,Hardware,media
+A conexão do escritório parou de funcionar,Preciso de ajuda. O sinal do wi-fi da sala de reunião está impedindo o acesso ao sistema financeiro para todo o time.,Rede,alta
+A rede cabeada sugestão,"Preciso de ajuda. A rede do terceiro andar está um pouco instável, mas ainda dá para trabalhar.",Rede,baixa
+Meu acesso ao servidor com problema,"Alguém pode olhar isso? Meu acesso ao servidor está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+Meu contracheque pequeno ajuste,"Por favor, verifiquem. Meu vale-refeição gostaria da segunda via, mas sem pressa.",RH,baixa
+O programa de emissão de nota fiscal quando possível,"Alguém pode olhar isso? O sistema interno tem um botão que não faz nada, acho que é um bug pequeno.",Software,baixa
+O programa de emissão de nota fiscal não funciona,"O navegador trava toda vez que eu tento fechar o mês, e o prazo é hoje à tarde.",Software,alta
+A impressora do setor não funciona,O teclado está fazendo um barulho estranho e desligando sozinho.,Hardware,alta
+O mouse instável,O monitor da minha mesa está esquentando muito mais que o normal.,Hardware,media
+O outlook apresentando falha,Preciso de ajuda. O programa de vendas apareceu uma mensagem de erro que eu não entendo.,Software,media
+O sistema financeiro urgente,O outlook está apagando os dados que eu digito antes de salvar.,Software,alta
+O erp instável,O sistema financeiro não está sincronizando os dados corretamente.,Software,media
+Meu acesso ao servidor apresentando falha,"Por favor, verifiquem. Minha senha está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+Meu computador instável,Alguém pode olhar isso? O headset a bateria não dura mais como antes.,Hardware,media
+O antivírus sugestão,"O sistema interno poderia ganhar uma atualização, está com a versão bem antiga.",Software,baixa
+A rede do terceiro andar apresentando falha,"Preciso de ajuda. A internet está caindo o dia todo, de tempos em tempos.",Rede,media
+A internet pequeno ajuste,"Alguém pode olhar isso? A vpn está um pouco instável, mas ainda dá para trabalhar.",Rede,baixa
+A porta da entrada pequeno ajuste,Preciso de ajuda. A mesa da recepção gostaria de agendar uma manutenção preventiva quando possível.,Manutenção,baixa
+Meu vale-refeição instável,"Alguém pode olhar isso? Meu contracheque não chegou ainda, já passou do prazo normal.",RH,media
+A internet instável,Preciso de ajuda. O sinal do wi-fi da sala de reunião está muito lenta desde essa manhã.,Rede,media
+Meu computador apresentando falha,O carregador do notebook está muito lento desde ontem.,Hardware,media
+Minha conta quando possível,"Por favor, verifiquem. Meu usuário gostaria de solicitar acesso a mais uma pasta compartilhada.",Acesso,baixa
+O excel parou de funcionar,"O navegador trava toda vez que eu tento fechar o mês, e o prazo é 30 minutos.",Software,alta
+O wi-fi com problema,"Por favor, verifiquem. A vpn está muito lenta desde essa manhã.",Rede,media
+Meu computador parou de funcionar,"Por favor, verifiquem. A impressora do setor caiu no chão e agora não liga mais.",Hardware,alta
+O monitor da minha mesa instável,Alguém pode olhar isso? A webcam a bateria não dura mais como antes.,Hardware,media
+O nobreak não funciona,Alguém pode olhar isso? A webcam não liga de jeito nenhum e tenho uma apresentação em 2 horas.,Hardware,alta
+A porta da entrada sugestão,Preciso de ajuda. O ar-condicionado da sala poderia dar uma olhada quando tiver uma folga na agenda.,Manutenção,baixa
+A cadeira da minha estação com problema,"A torneira da copa não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+O programa de emissão de nota fiscal com problema,O excel de vez em quando fecha sozinho sem aviso.,Software,media
+Minhas férias instável,Preciso de ajuda. Meu contracheque está com um valor errado esse mês.,RH,media
+O sinal do wi-fi da sala de reunião com problema,A vpn a VPN desconecta sozinha a cada meia hora.,Rede,media
+O nobreak instável,Meu notebook às vezes trava e precisa reiniciar.,Hardware,media
+A lâmpada da minha mesa instável,"Preciso de ajuda. A mesa da recepção está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+O teams instável,O programa de emissão de nota fiscal está demorando muito mais que o normal para carregar.,Software,media
+Minha senha não funciona,"Meu e-mail corporativo não consigo entrar de jeito nenhum, já tentei recuperar a senha três vezes.",Acesso,alta
+O nobreak sugestão,Alguém pode olhar isso? A impressora do setor gostaria de um mouse sem fio para substituir o com fio.,Hardware,baixa
+O wi-fi sugestão,"A internet está um pouco instável, mas ainda dá para trabalhar.",Rede,baixa
+O teclado urgente,Alguém pode olhar isso? O headset quebrou completamente e não consigo trabalhar.,Hardware,alta
+O sinal do wi-fi da sala de reunião urgente,O wi-fi caiu completamente e ninguém do setor consegue trabalhar.,Rede,alta
+A lâmpada da minha mesa parou de funcionar,O ar-condicionado da sala de reuniões está com vazamento e alagando o corredor.,Manutenção,alta
+O teclado quando possível,"Por favor, verifiquem. A estação de trabalho está com um risco na tela, só estética mesmo.",Hardware,baixa
+Meu usuário instável,"Preciso de ajuda. Meu usuário está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+A vpn urgente,"A vpn não conecta de jeito nenhum, preciso urgente para uma reunião em hoje à tarde.",Rede,alta
+Meu acesso ao servidor instável,Minha conta esqueci a senha e preciso resetar.,Acesso,media
+A porta da entrada instável,"Alguém pode olhar isso? O ar-condicionado da sala não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+Minha senha com problema,"Por favor, verifiquem. Minha senha está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+O nobreak com problema,O nobreak está esquentando muito mais que o normal.,Hardware,media
+Meu crachá de acesso quando possível,"Alguém pode olhar isso? Meu e-mail corporativo queria trocar minha senha por segurança, sem urgência.",Acesso,baixa
+Meu notebook não funciona,O teclado quebrou completamente e não consigo trabalhar.,Hardware,alta
+Minha senha urgente,"Por favor, verifiquem. Meu usuário foi bloqueado e preciso urgente para uma entrega em 1 hora.",Acesso,alta
+A cadeira da minha estação urgente,"Preciso de ajuda. O vaso sanitário do banheiro quebrou completamente e está causando risco, preciso urgente.",Manutenção,alta
+O sinal do wi-fi da sala de reunião não funciona,Alguém pode olhar isso? A rede cabeada está impedindo o acesso ao sistema financeiro para todo o time.,Rede,alta
+Meu computador pequeno ajuste,"A impressora do setor fez um barulho diferente hoje de manhã, mas continua funcionando.",Hardware,baixa
+Meu atestado não funciona,"Por favor, verifiquem. Minhas férias preciso da segunda via urgente para amanhã de manhã.",RH,alta
+O outlook apresentando falha,"Por favor, verifiquem. O excel de vez em quando fecha sozinho sem aviso.",Software,media
+Meu contracheque pequeno ajuste,Minhas férias gostaria de agendar minhas férias para o próximo trimestre.,RH,baixa
+Meu atestado não funciona,"Por favor, verifiquem. Meu vale-transporte não recebi o pagamento desse mês e preciso resolver hoje.",RH,alta
+A rede do terceiro andar com problema,"A vpn está caindo o dia todo, de tempos em tempos.",Rede,media
+A porta da entrada apresentando falha,"A porta da entrada está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+O headset quando possível,Alguém pode olhar isso? O nobreak queria trocar por um modelo mais novo quando possível.,Hardware,baixa
+A mesa da recepção sugestão,"O elevador está com um pequeno desgaste, nada urgente.",Manutenção,baixa
+O sistema financeiro urgente,"O navegador trava toda vez que eu tento fechar o mês, e o prazo é 1 hora.",Software,alta
+Meu vale-refeição pequeno ajuste,Meu contracheque gostaria de agendar minhas férias para o próximo trimestre.,RH,baixa
+O headset quando possível,"Preciso de ajuda. A impressora do setor fez um barulho diferente hoje de manhã, mas continua funcionando.",Hardware,baixa
+O ar-condicionado da sala urgente,"A porta da entrada quebrou completamente e está causando risco, preciso urgente.",Manutenção,alta
+Meu usuário instável,"Minha conta está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+Meu atestado com problema,"Por favor, verifiquem. Meu atestado preciso entender uma cobrança que apareceu.",RH,media
+O carregador do notebook com problema,Preciso de ajuda. Meu notebook está muito lento desde ontem.,Hardware,media
+A conexão do escritório apresentando falha,Preciso de ajuda. O sinal do wi-fi da sala de reunião a VPN desconecta sozinha a cada meia hora.,Rede,media
+O erp urgente,O sistema de ponto trava a tela toda vez que abro o relatório.,Software,alta
+O navegador sugestão,"Por favor, verifiquem. O sistema interno tem um botão que não faz nada, acho que é um bug pequeno.",Software,baixa
+O sistema de ponto com problema,O excel de vez em quando fecha sozinho sem aviso.,Software,media
+Meu acesso ao sistema quando possível,"Meu usuário queria trocar minha senha por segurança, sem urgência.",Acesso,baixa
+Meu vale-transporte quando possível,Meu holerite gostaria de agendar minhas férias para o próximo trimestre.,RH,baixa
+Meu atestado apresentando falha,"Meu contracheque não chegou ainda, já passou do prazo normal.",RH,media
+Meu acesso ao sistema apresentando falha,Meu login não consigo acessar uma pasta específica que preciso.,Acesso,media
+A conexão do escritório com problema,O sinal do wi-fi da sala de reunião está muito lenta desde essa manhã.,Rede,media
+Meu contracheque instável,"Por favor, verifiquem. Meu atestado preciso entender uma cobrança que apareceu.",RH,media
+Meu plano de saúde parou de funcionar,"Por favor, verifiquem. Meu atestado preciso da segunda via urgente para hoje à tarde.",RH,alta
+O elevador apresentando falha,"A lâmpada da minha mesa está com um problema que atrapalha, mas ainda dá pra usar.",Manutenção,media
+Minha senha apresentando falha,"Meu e-mail corporativo está pedindo verificação toda vez que eu entro, é meio chato.",Acesso,media
+O sistema de ponto quando possível,Preciso de ajuda. O navegador queria sugerir uma melhoria na tela inicial.,Software,baixa
+Meu vale-refeição com problema,Meu vale-transporte está com um valor errado esse mês.,RH,media
+A vpn sugestão,"A vpn está um pouco instável, mas ainda dá para trabalhar.",Rede,baixa
+O wi-fi não funciona,Alguém pode olhar isso? A rede cabeada caiu completamente e ninguém do setor consegue trabalhar.,Rede,alta
+Minhas férias sugestão,Meu contracheque gostaria de agendar minhas férias para o próximo trimestre.,RH,baixa
+A rede interna não funciona,"A rede cabeada não conecta de jeito nenhum, preciso urgente para uma reunião em amanhã de manhã.",Rede,alta
+Meu contracheque não funciona,Meu holerite meu plano de saúde foi cancelado sem explicação e tenho consulta em amanhã de manhã.,RH,alta
+O sinal do wi-fi da sala de reunião instável,Preciso de ajuda. A rede interna a VPN desconecta sozinha a cada meia hora.,Rede,media
+A cadeira da minha estação instável,"A lâmpada da minha mesa não está funcionando direito, fica ligando e desligando sozinho.",Manutenção,media
+Meu holerite não funciona,Meu benefício meu plano de saúde foi cancelado sem explicação e tenho consulta em 1 hora.,RH,alta
+A rede do terceiro andar urgente,Alguém pode olhar isso? O wi-fi está fora do ar há mais de uma hora.,Rede,alta
+Meu crachá de acesso instável,Meu crachá de acesso não consigo acessar uma pasta específica que preciso.,Acesso,media
+Meu e-mail corporativo quando possível,Alguém pode olhar isso? Meu login gostaria de solicitar acesso a mais uma pasta compartilhada.,Acesso,baixa
+O headset apresentando falha,"Por favor, verifiquem. O carregador do notebook às vezes trava e precisa reiniciar.",Hardware,media
+Meu benefício parou de funcionar,Meu plano de saúde meu plano de saúde foi cancelado sem explicação e tenho consulta em amanhã de manhã.,RH,alta
+O sistema financeiro com problema,O outlook apareceu uma mensagem de erro que eu não entendo.,Software,media

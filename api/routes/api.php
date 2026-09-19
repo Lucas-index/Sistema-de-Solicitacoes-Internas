@@ -44,4 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/relatorios/sla-estourado', [SolicitacaoController::class, 'slaEstourado']);
     Route::get('/relatorios/pendentes', [SolicitacaoController::class, 'pendentesExecucao']);
+
+    Route::post('/solicitacoes/{solicitacao}/corrigir-classificacao', [SolicitacaoController::class, 'corrigirClassificacao']);
 });

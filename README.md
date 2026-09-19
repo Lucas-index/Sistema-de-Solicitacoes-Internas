@@ -1,10 +1,10 @@
 # Sistema de Solicitações Internas — README
 
-Este é o guia principal do projeto. Ele explica como rodar as três partes do sistema, os comandos do dia a dia, o que cada rota faz, e termina com uma história mostrando tudo em ação.
+Este é o guia principal do projeto. Ele explica como rodar as três partes do sistema (manualmente ou via Docker), os comandos do dia a dia, o que cada rota faz, e termina com uma história mostrando tudo em ação.
 
 ## Visão geral
 
-O projeto tem três partes, cada uma numa pasta própria, rodando ao mesmo tempo em terminais separados:
+O projeto tem três partes, cada uma numa pasta própria:
 
 | Pasta | O que é | Porta |
 |---|---|---|
@@ -12,35 +12,87 @@ O projeto tem três partes, cada uma numa pasta própria, rodando ao mesmo tempo
 | `python-service` | Serviço de relatórios em Python (FastAPI) — tempo médio, volume, recorrência | `8001` |
 | `frontend` | Interface em React (Vite) — telas de login, chamados e painéis | `5173` |
 
+Existem **dois jeitos de rodar o projeto**: manualmente (três terminais, um comando por serviço) ou via **Docker Compose** (um único comando sobe tudo, incluindo o banco de dados). Os dois modos convivem, cada um com seu uso ideal — veja a seção 1.3.
+
 ---
 
-## 1. Como iniciar os três servidores
+## 1. Como iniciar
 
-Você precisa de **três abas de terminal abertas ao mesmo tempo**, uma para cada serviço. Nenhuma delas pode ser fechada enquanto você estiver usando o sistema.
+### 1.1 Modo manual (bom para desenvolver e ver mudanças em tempo real)
 
-### Terminal 1 — API (Laravel)
+Três abas de terminal abertas ao mesmo tempo:
+
+**Terminal 1 — API (Laravel)**
 ```
 cd api
 php artisan serve
 ```
 Fica no ar em `http://127.0.0.1:8000`.
 
-### Terminal 2 — Relatórios (Python)
+**Terminal 2 — Relatórios (Python)**
 ```
 cd python-service
 venv\Scripts\activate
 uvicorn main:app --reload --port 8001
 ```
-Fica no ar em `http://127.0.0.1:8001`. Se o ambiente virtual (`venv`) ainda não existir, veja a seção de comandos do Python mais abaixo.
+Fica no ar em `http://127.0.0.1:8001`.
 
-### Terminal 3 — Front-end (React)
+**Terminal 3 — Front-end (React)**
 ```
 cd frontend
 npm run dev
 ```
-Fica no ar em `http://localhost:5173` — é esse endereço que você abre no navegador para usar o sistema.
+Fica no ar em `http://localhost:5173`.
 
 Para desligar qualquer um dos três, clique no terminal correspondente e aperte `Ctrl+C`.
+
+### 1.2 Modo Docker (bom para rodar tudo de uma vez, ou mostrar o projeto pronto)
+
+Um único terminal, na **raiz do projeto** (onde está o `docker-compose.yml`, ao lado de `api`, `python-service` e `frontend`):
+
+```
+docker compose up --build
+```
+
+Esse comando sobe **quatro** containers de uma vez: banco MySQL, API, serviço Python e front-end (compilado e servido por nginx). Na primeira vez demora alguns minutos (baixa as imagens base e instala as dependências).
+
+- Front-end: `http://localhost:5173`
+- API: `http://localhost:8000`
+- Serviço Python: `http://localhost:8001`
+- Banco de dados (acessível de fora, se precisar): `localhost:3307`
+
+Para rodar em segundo plano, sem prender o terminal:
+```
+docker compose up -d
+```
+
+Para derrubar tudo:
+```
+docker compose down
+```
+
+Para reconstruir só um serviço específico (depois de editar código dele):
+```
+docker compose up --build api
+docker compose up --build python-service
+docker compose up --build frontend
+```
+
+**Antes de usar pela primeira vez:**
+1. Copie `.env.example` (da raiz) para `.env`, também na raiz — alimenta as senhas do banco e a chave do serviço Python usadas pelo Compose.
+2. Tenha o Docker Desktop instalado e aberto (com "Engine running" no canto inferior esquerdo).
+
+**Um detalhe importante:** dentro do Docker, o banco se chama `db` (não `127.0.0.1`) — os containers se enxergam pelo nome do serviço, não por endereço local. Isso já vem configurado no `docker-compose.yml`.
+
+**O banco de dados do Docker é separado do banco local.** Se você já tinha usuários/setores/categorias de teste criados rodando no modo manual, eles **não existem** no banco do Docker (é um volume novo e vazio). Recrie as contas de teste (seção 6) e os dados básicos (setor, categoria) depois de subir pela primeira vez.
+
+### 1.3 Qual modo usar quando
+
+| Situação | Use |
+|---|---|
+| Codando e testando mudanças a toda hora | Modo manual — `npm run dev` atualiza a tela sozinho, `--reload` do uvicorn também |
+| Rodar o projeto "pronto", mostrar pra alguém, simular produção | Modo Docker |
+| Editou algo no front-end enquanto o Docker está rodando | Precisa `docker compose up --build frontend` — o Docker serve uma versão já compilada, não atualiza sozinho |
 
 ---
 
@@ -50,46 +102,61 @@ Para desligar qualquer um dos três, clique no terminal correspondente e aperte 
 
 | Comando | Para que serve |
 |---|---|
-| `php artisan serve` | Sobe o servidor da API |
+| `php artisan serve` | Sobe o servidor da API (modo manual) |
 | `php artisan route:list` | Lista todas as rotas existentes |
 | `php artisan route:list --path=solicitacoes` | Lista só as rotas de um assunto específico |
 | `php artisan migrate` | Aplica migrations pendentes no banco |
 | `php artisan migrate:fresh` | Apaga **todas** as tabelas e recria vazias (cuidado, perde todos os dados) |
-| `php artisan tinker` | Abre um console interativo para consultar/editar o banco direto pelo Eloquent |
+| `php artisan tinker` | Console interativo para consultar/editar o banco direto pelo Eloquent |
 | `php artisan make:model Nome -mcr` | Cria model + migration + controller de uma vez |
 | `php artisan make:migration nome_da_migration` | Cria uma migration nova |
 | `php artisan solicitacoes:verificar-sla` | Roda manualmente a verificação de chamados atrasados |
 | `php artisan optimize:clear` | Limpa cache de rotas, config e views (use quando algo "não atualiza" mesmo após editar o código) |
-| `composer dump-autoload` | Recarrega o mapeamento de classes do PHP (use após criar um arquivo novo que não está sendo encontrado) |
+| `composer dump-autoload` | Recarrega o mapeamento de classes do PHP |
 
 ### Python (`python-service`)
 
 | Comando | Para que serve |
 |---|---|
 | `python -m venv venv` | Cria o ambiente virtual (só na primeira vez) |
-| `venv\Scripts\activate` | Ativa o ambiente virtual (sempre que abrir um terminal novo aqui) |
-| `pip install fastapi uvicorn pymysql python-dotenv` | Instala as dependências (só na primeira vez, ou se as dependências mudarem) |
-| `uvicorn main:app --reload --port 8001` | Sobe o serviço de relatórios |
+| `venv\Scripts\activate` | Ativa o ambiente virtual |
+| `pip install -r requirements.txt` | Instala as dependências |
+| `uvicorn main:app --reload --port 8001` | Sobe o serviço de relatórios (modo manual) |
 
 ### Front-end (`frontend`)
 
 | Comando | Para que serve |
 |---|---|
-| `npm install` | Instala as dependências (só na primeira vez, ou quando o `package.json` mudar) |
-| `npm run dev` | Sobe o servidor de desenvolvimento |
-| `npm run build` | Gera uma versão de produção otimizada (pasta `dist`) |
+| `npm install` | Instala as dependências |
+| `npm run dev` | Sobe o servidor de desenvolvimento (modo manual) |
+| `npm run build` | Gera a versão de produção (pasta `dist`) |
+
+### Docker (raiz do projeto)
+
+| Comando | Para que serve |
+|---|---|
+| `docker compose up --build` | Sobe os 4 containers, reconstruindo as imagens |
+| `docker compose up -d` | Sobe em segundo plano, sem prender o terminal |
+| `docker compose down` | Derruba todos os containers |
+| `docker compose down -v` | Derruba tudo **e apaga o banco de dados** (útil pra recomeçar do zero) |
+| `docker compose ps` | Lista os containers e o status de cada um |
+| `docker compose logs api --tail=50` | Mostra as últimas 50 linhas de log de um serviço |
+| `docker compose exec api tail -n 80 storage/logs/laravel.log` | Mostra o log de erro do Laravel de dentro do container |
+| `docker compose exec api php artisan tinker` | Abre o Tinker de dentro do container |
+| `docker compose exec api cat .env` | Confirma quais variáveis de ambiente o container está usando de fato |
 
 ---
 
 ## 3. Como verificar se uma requisição está indo pela rota certa
 
-1. **Confira a URL exata.** Troque qualquer coisa entre chaves (como `{id}`) pelo número real do registro — chaves nunca aparecem na URL de verdade.
+1. **Confira a URL exata.** Troque qualquer coisa entre chaves (como `{id}`) pelo número real do registro.
 2. **Confira o método HTTP.** `GET` é para consultar, `POST` é para criar ou executar uma ação.
-3. **Rode `php artisan route:list --path=<parte-da-url>`** para confirmar que a rota existe e ver qual controller ela chama.
+3. **Rode `php artisan route:list --path=<parte-da-url>`** para confirmar que a rota existe.
 4. **Confira os headers:** `Accept: application/json` e `Authorization: Bearer {token}` (para a API); `x-api-key` (para o serviço Python).
-5. **Use o Tinker** para ver o dado real no banco, sem passar pela API: `php artisan tinker`, depois `App\Models\Solicitacao::find(1)`.
-6. **No navegador, use o F12 (DevTools) → aba Network**, para ver exatamente qual chamada o front-end fez e o que veio de resposta — é o primeiro lugar a olhar quando uma tela do sistema não carrega.
-7. **Olhe o terminal de cada servidor.** Toda requisição que chega aparece ali — é como confirmar que a chamada realmente saiu do front-end e chegou no destino certo.
+5. **Use o Tinker** para ver o dado real no banco, sem passar pela API.
+6. **No navegador, use o F12 (DevTools) → aba Network**, para ver exatamente qual chamada o front-end fez.
+7. **Olhe o terminal (ou `docker compose logs`) de cada serviço.** Toda requisição que chega aparece ali.
+8. **Rodando via Docker:** se o comportamento parecer "antigo" mesmo após editar código, o problema costuma ser cache de configuração do Laravel (`php artisan config:clear` dentro do container) ou uma imagem que não foi reconstruída (`docker compose up --build <serviço>`).
 
 ---
 
@@ -148,7 +215,7 @@ Para desligar qualquer um dos três, clique no terminal correspondente e aperte 
 | Rota | O que faz |
 |---|---|
 | `GET /api/relatorios/sla-estourado` | Lista chamados que passaram do prazo de aprovação (SLA). |
-| `GET /api/relatorios/pendentes` | Lista chamados aprovados esperando execução — é a fila de trabalho da manutenção. |
+| `GET /api/relatorios/pendentes` | Lista chamados aprovados esperando execução — fila de trabalho da manutenção. |
 
 ---
 
@@ -160,7 +227,8 @@ Todas exigem o header `x-api-key` com o valor configurado no `.env` do `python-s
 |---|---|
 | `GET /relatorios/tempo-medio` | Tempo médio, em horas, para concluir um chamado, agrupado por categoria. |
 | `GET /relatorios/volume` | Quantidade de chamados por setor e por status. |
-| `GET /relatorios/recorrencia` | Palavras que se repetem em vários títulos de chamados, com a média de dias entre uma ocorrência e outra — ajuda a identificar o que está "quebrando" com mais frequência. |
+| `GET /relatorios/recorrencia` | Palavras que se repetem em vários títulos de chamados, com a média de dias entre uma ocorrência e outra. |
+| `GET /relatorios/exportar-excel` | Gera uma planilha `.xlsx` com todos os relatórios acima, em abas separadas. |
 
 ---
 
@@ -190,9 +258,9 @@ João chega ao trabalho e percebe que sua cadeira está com um problema sério n
 
 Ana recebe o chamado na fila dela. Ela olha os detalhes e decide aprovar. Na hora, o sistema registra essa decisão para sempre no histórico do chamado, e dispara um aviso pro João: *"Sua solicitação foi aprovada"*.
 
-Carlos, da manutenção, vê que tem um chamado aprovado esperando alguém pegar — ele nem precisa procurar, a fila dele já mostra só isso. Ele deixa um comentário avisando: *"Vou providenciar amanhã de manhã"*, e assume o chamado — o status muda para "em execução", e o nome dele fica registrado como responsável.
+Carlos, da manutenção, vê que tem um chamado aprovado esperando alguém pegar — ele nem precisa procurar, a fila dele já mostra só isso. Ele deixa um comentário avisando: *"Vou providenciar amanhã de manhã"*, e assume o chamado — o status muda para "em execução".
 
-No dia seguinte, Carlos troca a cadeira, tira uma foto da nova cadeira instalada e anexa ao chamado como comprovante. Em seguida, marca o trabalho como concluído.
+No dia seguinte, Carlos troca a cadeira, tira uma foto e anexa ao chamado como comprovante. Em seguida, marca o trabalho como concluído.
 
 João recebe o aviso, confere que a cadeira nova está lá, e fecha o chamado de vez. Fim feliz — e tudo o que aconteceu, do início ao fim, ficou guardado no histórico daquele chamado, como um diário completo.
 
@@ -200,18 +268,22 @@ João recebe o aviso, confere que a cadeira nova está lá, e fecha o chamado de
 
 Duas semanas depois, o computador de João simplesmente não liga mais. Ele abre um novo chamado: *"Computador queimou, preciso de um computador novo, prioridade alta"*.
 
-Dessa vez, Ana olha o pedido e vê que não tem verba disponível naquele momento. Ela recusa o chamado, e o sistema exige que ela escreva o motivo: *"Fora do orçamento no momento"*. João recebe a notificação explicando exatamente por que seu pedido não foi pra frente — sem mistério, com justificativa registrada.
+Dessa vez, Ana olha o pedido e vê que não tem verba disponível naquele momento. Ela recusa o chamado, e o sistema exige que ela escreva o motivo: *"Fora do orçamento no momento"*. João recebe a notificação explicando exatamente por que seu pedido não foi pra frente.
 
 ### Capítulo 3 — O teclado (e o mouse desconectado)
 
 Mais tarde, João percebe que algumas teclas do teclado não respondem. Ele abre um chamado: *"Teclado com defeito, algumas teclas não funcionam"*.
 
-Só que, minutos depois, ele descobre que na verdade era só o **mouse** que estava desconectado — e o teclado nunca teve problema nenhum. Como o chamado ainda está esperando aprovação e ninguém começou a mexer nele, João consegue simplesmente cancelar antes que a Ana perca tempo avaliando algo desnecessário.
+Só que, minutos depois, ele descobre que na verdade era só o **mouse** que estava desconectado. Como o chamado ainda está esperando aprovação, João consegue simplesmente cancelar antes que a Ana perca tempo avaliando algo desnecessário.
 
 ### Capítulo 4 — O chamado esquecido
 
-Num fim de semana prolongado, um chamado de prioridade baixa fica parado na fila da Ana por dias sem ninguém notar. Só que o sistema não esquece: passadas as 24 horas de prazo, ele mesmo percebe o atraso, marca o chamado como "SLA estourado" e avisa a Ana automaticamente. Quando ela volta a abrir o painel administrativo, o chamado já está destacado na aba de SLA — ninguém precisou lembrar dela manualmente.
+Num fim de semana prolongado, um chamado de prioridade baixa fica parado na fila da Ana por dias sem ninguém notar. Só que o sistema não esquece: passadas as 24 horas de prazo, ele mesmo percebe o atraso, marca o chamado como "SLA estourado" e avisa a Ana automaticamente.
+
+### Capítulo 5 — Uma cópia idêntica em qualquer computador
+
+Um colega de trabalho quer ver o sistema funcionando na própria máquina dele, sem instalar PHP, Python ou Node um por um. Ele só precisa do Docker instalado. Com `docker compose up --build`, o banco de dados, a API, o serviço de relatórios e o front-end sobem juntos, exatamente como foram descritos em código — sem nenhuma instalação manual, sem "na minha máquina funciona".
 
 ---
 
-Essa é a espinha dorsal do sistema: cada ação de cada personagem vira uma chamada de API, cada chamada vira uma linha no histórico, o sistema cobra a si mesmo quando algo demora demais, e cada papel só consegue fazer exatamente o que faz sentido para ele fazer.
+Essa é a espinha dorsal do sistema: cada ação de cada personagem vira uma chamada de API, cada chamada vira uma linha no histórico, o sistema cobra a si mesmo quando algo demora demais, e o ambiente inteiro pode ser reproduzido de forma idêntica em qualquer máquina.
