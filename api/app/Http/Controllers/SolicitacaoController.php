@@ -12,6 +12,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Models\TicketCorrection; 
+use App\Mail\NotificacaoChamado;
+use Illuminate\Support\Facades\Mail;
 
 class SolicitacaoController extends Controller
 {
@@ -386,12 +388,18 @@ public function correcoesRecentes(Request $request)
 }
 
     private function notificar(?int $usuarioId, string $mensagem): void
-    {
-        if (! $usuarioId) return;
+{
+    if (! $usuarioId) return;
 
-        Notificacao::create([
-            'usuario_id' => $usuarioId,
-            'mensagem' => $mensagem,
-        ]);
+    Notificacao::create([
+        'usuario_id' => $usuarioId,
+        'mensagem' => $mensagem,
+    ]);
+
+    $usuario = \App\Models\User::find($usuarioId);
+    if ($usuario?->email) {
+        Mail::to($usuario->email)
+            ->queue(new NotificacaoChamado($mensagem, $usuario->name));
     }
+}
 }
