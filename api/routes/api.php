@@ -46,4 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/relatorios/pendentes', [SolicitacaoController::class, 'pendentesExecucao']);
 
     Route::post('/solicitacoes/{solicitacao}/corrigir-classificacao', [SolicitacaoController::class, 'corrigirClassificacao']);
+
+    Route::get('/relatorios/triagem-manual', [SolicitacaoController::class, 'triagemManual']);
+    Route::get('/relatorios/qualidade-classificacao', [SolicitacaoController::class, 'qualidadeClassificacao']);
+    Route::get('/relatorios/correcoes', [SolicitacaoController::class, 'correcoesRecentes']);
 });

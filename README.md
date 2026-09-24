@@ -1,6 +1,6 @@
 # Sistema de Solicitações Internas — README
 
-Este é o guia principal do projeto. Ele explica como rodar as três partes do sistema (manualmente ou via Docker), os comandos do dia a dia, o que cada rota faz, e termina com uma história mostrando tudo em ação.
+Este é o guia principal do projeto. Ele explica como rodar as três partes do sistema (manualmente ou via Docker), os comandos do dia a dia, o pipeline de classificação automática, o que cada rota faz, e termina com uma história mostrando tudo em ação.
 
 ## Visão geral
 
@@ -9,90 +9,57 @@ O projeto tem três partes, cada uma numa pasta própria:
 | Pasta | O que é | Porta |
 |---|---|---|
 | `api` | Backend principal em Laravel — autenticação, chamados, aprovações, SLA | `8000` |
-| `python-service` | Serviço de relatórios em Python (FastAPI) — tempo médio, volume, recorrência | `8001` |
+| `python-service` | Serviço Python (FastAPI) — relatórios e classificação automática por ML | `8001` |
 | `frontend` | Interface em React (Vite) — telas de login, chamados e painéis | `5173` |
 
-Existem **dois jeitos de rodar o projeto**: manualmente (três terminais, um comando por serviço) ou via **Docker Compose** (um único comando sobe tudo, incluindo o banco de dados). Os dois modos convivem, cada um com seu uso ideal — veja a seção 1.3.
+Existem **dois jeitos de rodar o projeto**: manualmente (três terminais, um comando por serviço) ou via **Docker Compose** (um único comando sobe tudo, incluindo o banco de dados).
 
 ---
 
 ## 1. Como iniciar
 
-### 1.1 Modo manual (bom para desenvolver e ver mudanças em tempo real)
-
-Três abas de terminal abertas ao mesmo tempo:
+### 1.1 Modo manual
 
 **Terminal 1 — API (Laravel)**
 ```
 cd api
 php artisan serve
 ```
-Fica no ar em `http://127.0.0.1:8000`.
 
-**Terminal 2 — Relatórios (Python)**
+**Terminal 2 — Serviço Python (relatórios + classificação)**
 ```
 cd python-service
 venv\Scripts\activate
 uvicorn main:app --reload --port 8001
 ```
-Fica no ar em `http://127.0.0.1:8001`.
 
 **Terminal 3 — Front-end (React)**
 ```
 cd frontend
 npm run dev
 ```
-Fica no ar em `http://localhost:5173`.
 
-Para desligar qualquer um dos três, clique no terminal correspondente e aperte `Ctrl+C`.
-
-### 1.2 Modo Docker (bom para rodar tudo de uma vez, ou mostrar o projeto pronto)
-
-Um único terminal, na **raiz do projeto** (onde está o `docker-compose.yml`, ao lado de `api`, `python-service` e `frontend`):
+### 1.2 Modo Docker
 
 ```
 docker compose up --build
 ```
+Sobe os quatro containers (banco, API, serviço Python, front-end) de uma vez. Copie `.env.example` para `.env` na raiz antes da primeira vez.
 
-Esse comando sobe **quatro** containers de uma vez: banco MySQL, API, serviço Python e front-end (compilado e servido por nginx). Na primeira vez demora alguns minutos (baixa as imagens base e instala as dependências).
-
-- Front-end: `http://localhost:5173`
-- API: `http://localhost:8000`
-- Serviço Python: `http://localhost:8001`
-- Banco de dados (acessível de fora, se precisar): `localhost:3307`
-
-Para rodar em segundo plano, sem prender o terminal:
 ```
-docker compose up -d
+docker compose up -d       # em segundo plano
+docker compose down        # derruba tudo
+docker compose down -v     # derruba tudo e apaga o banco (recomeçar do zero)
+docker compose up --build api   # reconstrói só um serviço
 ```
-
-Para derrubar tudo:
-```
-docker compose down
-```
-
-Para reconstruir só um serviço específico (depois de editar código dele):
-```
-docker compose up --build api
-docker compose up --build python-service
-docker compose up --build frontend
-```
-
-**Antes de usar pela primeira vez:**
-1. Copie `.env.example` (da raiz) para `.env`, também na raiz — alimenta as senhas do banco e a chave do serviço Python usadas pelo Compose.
-2. Tenha o Docker Desktop instalado e aberto (com "Engine running" no canto inferior esquerdo).
-
-**Um detalhe importante:** dentro do Docker, o banco se chama `db` (não `127.0.0.1`) — os containers se enxergam pelo nome do serviço, não por endereço local. Isso já vem configurado no `docker-compose.yml`.
-
-**O banco de dados do Docker é separado do banco local.** Se você já tinha usuários/setores/categorias de teste criados rodando no modo manual, eles **não existem** no banco do Docker (é um volume novo e vazio). Recrie as contas de teste (seção 6) e os dados básicos (setor, categoria) depois de subir pela primeira vez.
 
 ### 1.3 Qual modo usar quando
 
 | Situação | Use |
 |---|---|
-| Codando e testando mudanças a toda hora | Modo manual — `npm run dev` atualiza a tela sozinho, `--reload` do uvicorn também |
-| Rodar o projeto "pronto", mostrar pra alguém, simular produção | Modo Docker |
-| Editou algo no front-end enquanto o Docker está rodando | Precisa `docker compose up --build frontend` — o Docker serve uma versão já compilada, não atualiza sozinho |
+| Codando e testando mudanças a toda hora | Modo manual |
+| Rodar o projeto "pronto", mostrar pra alguém | Modo Docker |
+| Editou o front-end com o Docker rodando | Precisa `docker compose up --build frontend` |
 
 ---
 
@@ -102,188 +69,216 @@ docker compose up --build frontend
 
 | Comando | Para que serve |
 |---|---|
-| `php artisan serve` | Sobe o servidor da API (modo manual) |
-| `php artisan route:list` | Lista todas as rotas existentes |
-| `php artisan route:list --path=solicitacoes` | Lista só as rotas de um assunto específico |
-| `php artisan migrate` | Aplica migrations pendentes no banco |
-| `php artisan migrate:fresh` | Apaga **todas** as tabelas e recria vazias (cuidado, perde todos os dados) |
-| `php artisan tinker` | Console interativo para consultar/editar o banco direto pelo Eloquent |
-| `php artisan make:model Nome -mcr` | Cria model + migration + controller de uma vez |
-| `php artisan make:migration nome_da_migration` | Cria uma migration nova |
-| `php artisan solicitacoes:verificar-sla` | Roda manualmente a verificação de chamados atrasados |
-| `php artisan optimize:clear` | Limpa cache de rotas, config e views (use quando algo "não atualiza" mesmo após editar o código) |
-| `composer dump-autoload` | Recarrega o mapeamento de classes do PHP |
+| `php artisan serve` | Sobe o servidor da API |
+| `php artisan route:list` | Lista todas as rotas |
+| `php artisan migrate` | Aplica migrations pendentes |
+| `php artisan migrate:fresh` | Apaga tudo e recria vazio |
+| `php artisan tinker` | Console interativo do Eloquent |
+| `php artisan solicitacoes:verificar-sla` | Roda a verificação de atraso manualmente |
+| `php artisan optimize:clear` | Limpa cache de rotas/config/views |
 
 ### Python (`python-service`)
 
 | Comando | Para que serve |
 |---|---|
-| `python -m venv venv` | Cria o ambiente virtual (só na primeira vez) |
+| `python -m venv venv` | Cria o ambiente virtual |
 | `venv\Scripts\activate` | Ativa o ambiente virtual |
 | `pip install -r requirements.txt` | Instala as dependências |
-| `uvicorn main:app --reload --port 8001` | Sobe o serviço de relatórios (modo manual) |
+| `python treinar.py` | Treina (ou retreina) os modelos de classificação |
+| `uvicorn main:app --reload --port 8001` | Sobe o serviço |
+
+**Atenção:** o `main.py` carrega os arquivos `.joblib` do modelo **uma vez, na inicialização**. Depois de rodar `treinar.py`, é preciso **reiniciar o `uvicorn`** para o servidor usar o modelo novo.
 
 ### Front-end (`frontend`)
 
 | Comando | Para que serve |
 |---|---|
 | `npm install` | Instala as dependências |
-| `npm run dev` | Sobe o servidor de desenvolvimento (modo manual) |
-| `npm run build` | Gera a versão de produção (pasta `dist`) |
+| `npm run dev` | Sobe o servidor de desenvolvimento |
+| `npm run build` | Gera a versão de produção |
 
 ### Docker (raiz do projeto)
 
 | Comando | Para que serve |
 |---|---|
-| `docker compose up --build` | Sobe os 4 containers, reconstruindo as imagens |
-| `docker compose up -d` | Sobe em segundo plano, sem prender o terminal |
-| `docker compose down` | Derruba todos os containers |
-| `docker compose down -v` | Derruba tudo **e apaga o banco de dados** (útil pra recomeçar do zero) |
-| `docker compose ps` | Lista os containers e o status de cada um |
-| `docker compose logs api --tail=50` | Mostra as últimas 50 linhas de log de um serviço |
-| `docker compose exec api tail -n 80 storage/logs/laravel.log` | Mostra o log de erro do Laravel de dentro do container |
-| `docker compose exec api php artisan tinker` | Abre o Tinker de dentro do container |
-| `docker compose exec api cat .env` | Confirma quais variáveis de ambiente o container está usando de fato |
+| `docker compose up --build` | Sobe os 4 containers |
+| `docker compose logs api --tail=50` | Log de um serviço |
+| `docker compose exec api php artisan tinker` | Tinker dentro do container |
+| `docker compose exec api cat .env` | Confirma as variáveis de ambiente reais do container |
 
 ---
 
-## 3. Como verificar se uma requisição está indo pela rota certa
+## 3. Como investigar um problema
 
-1. **Confira a URL exata.** Troque qualquer coisa entre chaves (como `{id}`) pelo número real do registro.
-2. **Confira o método HTTP.** `GET` é para consultar, `POST` é para criar ou executar uma ação.
-3. **Rode `php artisan route:list --path=<parte-da-url>`** para confirmar que a rota existe.
-4. **Confira os headers:** `Accept: application/json` e `Authorization: Bearer {token}` (para a API); `x-api-key` (para o serviço Python).
-5. **Use o Tinker** para ver o dado real no banco, sem passar pela API.
-6. **No navegador, use o F12 (DevTools) → aba Network**, para ver exatamente qual chamada o front-end fez.
-7. **Olhe o terminal (ou `docker compose logs`) de cada serviço.** Toda requisição que chega aparece ali.
-8. **Rodando via Docker:** se o comportamento parecer "antigo" mesmo após editar código, o problema costuma ser cache de configuração do Laravel (`php artisan config:clear` dentro do container) ou uma imagem que não foi reconstruída (`docker compose up --build <serviço>`).
+1. Confira a URL exata (sem `{chaves}` literais) e o método HTTP.
+2. `php artisan route:list --path=<parte-da-url>` confirma se a rota existe.
+3. Confira os headers: `Accept: application/json`, `Authorization: Bearer {token}` (API), `x-api-key` (Python).
+4. Use o Tinker pra ver o dado real no banco, sem passar pela API.
+5. No navegador, **F12 → Network**, para ver a chamada real feita pelo front-end.
+6. Se um erro não aparece em `storage/logs/laravel.log`, tente devolver a mensagem direto na resposta (`observacao` de um histórico, por exemplo) — em alguns ambientes o log não é escrito de forma confiável.
+7. Se algo não atualiza após editar código: `php artisan config:clear` (Laravel) ou reiniciar o `uvicorn` (Python — ele não recarrega modelos `.joblib` sozinho, mesmo com `--reload`).
 
 ---
 
-## 4. Dicionário de rotas — API (Laravel)
+## 4. Pipeline de classificação automática (Machine Learning)
+
+Chamados não pedem mais categoria/prioridade no formulário — o colaborador só escreve título e descrição, e um modelo de Machine Learning classifica automaticamente.
+
+### 4.1 Como funciona, passo a passo
+
+1. O chamado é salvo com status `em_classificacao` — **antes** de qualquer chamada ao serviço de ML (nada se perde se o Python cair).
+2. O Laravel chama `POST /classificar` no serviço Python, mandando `ticket_id`, `title`, `description`.
+3. O Python devolve `category`, `priority`, e a **confiança** de cada um (vinda de `predict_proba`, nunca inventada).
+4. Se a **confiança da categoria** for ≥ 0.55, o chamado é roteado automaticamente: categoria, prioridade e aprovador preenchidos, status vira `pendente_aprovacao`.
+5. Se a confiança for menor, o status vira `aguardando_classificacao_manual`, e o chamado aparece na fila de triagem do painel administrativo.
+6. Se o Python estiver fora do ar ou der timeout, o chamado (que já estava salvo) também cai em `aguardando_classificacao_manual` — o ML nunca é ponto único de falha.
+
+### 4.2 Por que o threshold é 0.55, e não 0.70
+
+O case original sugere 0.70 como exemplo. Na prática, testamos o modelo com frases variadas e vimos que a **prioridade** costuma ter confiança bem mais baixa que a categoria (sinais de urgência no texto são mais sutis que sinais de assunto). Por isso, a decisão de rotear automaticamente usa só a **confiança da categoria** — é o que importa para o roteamento por setor — com threshold 0.55, calibrado observando o comportamento real do modelo em vez de usar um número arbitrário. A prioridade sugerida vem junto; se estiver errada, a Ana ajusta sem precisar reclassificar o assunto todo.
+
+### 4.3 Roteamento por categoria
+
+| Categoria | Setor | O que acontece após aprovar |
+|---|---|---|
+| Hardware, Software, Rede | TI | Vai para a fila de execução (Carlos) |
+| Acesso | RH | Resolvido na hora da aprovação — vai direto para `concluida` |
+| RH | RH | Resolvido na hora da aprovação — vai direto para `concluida` |
+| Manutenção | Manutenção | Vai para a fila de execução (Carlos) |
+
+A Ana aprova chamados de todas as categorias — só a execução pós-aprovação é que se divide (ou vai para o Carlos, ou já se resolve com a aprovação, dependendo do setor).
+
+### 4.4 Correção humana
+
+Um aprovador (ou admin) pode corrigir a classificação de um chamado (`POST /solicitacoes/{id}/corrigir-classificacao`). A correção é registrada preservando a previsão original do modelo — nada é sobrescrito, fica tudo auditável.
+
+### 4.5 Retreinar o modelo
+
+```
+cd python-service
+python treinar.py
+```
+Reinicie o `uvicorn` depois. O script já compara Logistic Regression com Naive Bayes e usa o que performar melhor, tanto para categoria quanto para prioridade.
+
+---
+
+## 5. Dicionário de rotas — API (Laravel)
 
 ### Contas e login
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/register` | Cria uma conta nova (nome, e-mail, senha e papel: solicitante, aprovador, executor ou admin). Não existe tela para isso — é feito por comando, normalmente pelo RH. |
-| `POST /api/login` | Entra com uma conta já existente e devolve o token de acesso. |
+| `POST /api/register` | Cria uma conta (feito por comando, normalmente pelo RH — não existe tela). |
+| `POST /api/login` | Login, devolve token. |
 | `POST /api/logout` | Invalida o token atual. |
-| `GET /api/me` | Mostra os dados de quem está logado. |
+| `GET /api/me` | Dados de quem está logado. |
 
 ### Organização
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/setores` | Cadastra um setor da empresa (ex: TI, RH, Manutenção). |
-| `GET /api/setores` | Lista os setores cadastrados. |
-| `POST /api/categorias` | Cadastra um tipo de solicitação, vinculado a um setor responsável e um prazo (SLA, padrão 24h). |
-| `GET /api/categorias` | Lista as categorias cadastradas. |
+| `POST /api/setores` / `GET /api/setores` | Cadastra / lista setores. |
+| `POST /api/categorias` / `GET /api/categorias` | Cadastra / lista categorias (setor responsável + SLA). |
 
 ### Solicitações
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/solicitacoes` | Abre um novo chamado. O aprovador é descoberto automaticamente pela categoria. |
-| `GET /api/solicitacoes` | Lista os chamados relacionados à pessoa logada. |
-| `GET /api/solicitacoes/{id}` | Detalhe completo de um chamado: status, histórico, comentários, anexos. |
-| `POST /api/solicitacoes/{id}/aprovar` | Aprova o chamado. |
-| `POST /api/solicitacoes/{id}/rejeitar` | Recusa o chamado (motivo obrigatório). |
-| `POST /api/solicitacoes/{id}/executar` | Alguém da equipe responsável assume o chamado. |
-| `POST /api/solicitacoes/{id}/concluir` | Marca o trabalho como finalizado. |
-| `POST /api/solicitacoes/{id}/cancelar` | O solicitante desiste do chamado (só antes da execução começar). |
-| `POST /api/solicitacoes/{id}/fechar` | O solicitante confirma e encerra de vez. |
+| `POST /api/solicitacoes` | Abre um chamado (só título e descrição — categoria/prioridade vêm da IA). |
+| `GET /api/solicitacoes` | Lista os chamados da pessoa logada. |
+| `GET /api/solicitacoes/{id}` | Detalhe completo: status, histórico, comentários, anexos, previsões da IA. |
+| `POST /api/solicitacoes/{id}/aprovar` | Aprova. Se a categoria for de setor RH, resolve direto (`concluida`). |
+| `POST /api/solicitacoes/{id}/rejeitar` | Recusa (motivo obrigatório). |
+| `POST /api/solicitacoes/{id}/executar` | Executor assume o chamado. |
+| `POST /api/solicitacoes/{id}/concluir` | Marca como finalizado. |
+| `POST /api/solicitacoes/{id}/cancelar` | Solicitante desiste (antes da execução). |
+| `POST /api/solicitacoes/{id}/fechar` | Solicitante confirma e encerra. |
+| `POST /api/solicitacoes/{id}/corrigir-classificacao` | Aprovador corrige categoria/prioridade sugeridas pela IA. |
 
 ### Comentários e anexos
 
 | Rota | O que faz |
 |---|---|
-| `POST /api/solicitacoes/{id}/comentarios` | Adiciona uma mensagem ao chamado. |
-| `GET /api/solicitacoes/{id}/comentarios` | Lista as mensagens do chamado. |
-| `POST /api/solicitacoes/{id}/anexos` | Anexa um arquivo ao chamado. |
-| `GET /api/solicitacoes/{id}/anexos` | Lista os arquivos anexados. |
+| `POST` / `GET /api/solicitacoes/{id}/comentarios` | Adiciona / lista mensagens do chamado. |
+| `POST` / `GET /api/solicitacoes/{id}/anexos` | Anexa / lista arquivos do chamado. |
 
 ### Notificações
 
 | Rota | O que faz |
 |---|---|
-| `GET /api/notificacoes` | Lista os avisos automáticos da pessoa logada. |
+| `GET /api/notificacoes` | Avisos automáticos da pessoa logada. |
 | `POST /api/notificacoes/{id}/marcar-lida` | Marca um aviso como visto. |
 
-### Relatórios (dentro do Laravel)
+### Relatórios (Laravel)
 
 | Rota | O que faz |
 |---|---|
-| `GET /api/relatorios/sla-estourado` | Lista chamados que passaram do prazo de aprovação (SLA). |
-| `GET /api/relatorios/pendentes` | Lista chamados aprovados esperando execução — fila de trabalho da manutenção. |
+| `GET /api/relatorios/sla-estourado` | Chamados que passaram do prazo de aprovação. |
+| `GET /api/relatorios/pendentes` | Fila de execução (chamados aprovados, aguardando alguém assumir). |
+| `GET /api/relatorios/triagem-manual` | Fila de chamados que a IA não conseguiu classificar com confiança suficiente. |
+| `GET /api/relatorios/qualidade-classificacao` | Métricas agregadas: total classificado, automático vs manual, correções, confiança média. |
+| `GET /api/relatorios/correcoes` | Últimas 20 correções feitas por aprovadores. |
 
 ---
 
-## 5. Dicionário de rotas — Serviço de relatórios (Python)
+## 6. Dicionário de rotas — Serviço Python
 
-Todas exigem o header `x-api-key` com o valor configurado no `.env` do `python-service`.
+Todas exigem o header `x-api-key`.
 
 | Rota | O que faz |
 |---|---|
-| `GET /relatorios/tempo-medio` | Tempo médio, em horas, para concluir um chamado, agrupado por categoria. |
-| `GET /relatorios/volume` | Quantidade de chamados por setor e por status. |
-| `GET /relatorios/recorrencia` | Palavras que se repetem em vários títulos de chamados, com a média de dias entre uma ocorrência e outra. |
-| `GET /relatorios/exportar-excel` | Gera uma planilha `.xlsx` com todos os relatórios acima, em abas separadas. |
+| `POST /classificar` | Recebe título e descrição, devolve categoria, prioridade e confiança de cada uma. |
+| `GET /relatorios/tempo-medio` | Tempo médio de resolução por categoria. |
+| `GET /relatorios/volume` | Volume de chamados por setor e status. |
+| `GET /relatorios/recorrencia` | Palavras que mais se repetem nos títulos, com frequência de recorrência. |
+| `GET /relatorios/exportar-excel` | Planilha `.xlsx` com todos os relatórios acima, em abas. |
 
 ---
 
-## 6. Contas de teste
+## 7. Contas de teste
 
 | Pessoa | Papel | E-mail | Senha |
 |---|---|---|---|
-| Ana | Aprovadora (RH) | `ana@teste.com` | `123456` |
+| Ana | Aprovadora (aprova tudo) | `ana@teste.com` | `123456` |
 | João | Solicitante (TI) | `joao@teste.com` | `123456` |
-| Carlos | Executor (Manutenção) | `carlos@teste.com` | `123456` |
-
-Cada uma cai numa tela inicial diferente ao logar no front-end: Ana no painel administrativo, João em "Meus chamados", Carlos na fila de execução.
+| Carlos | Executor (Hardware/Software/Rede/Manutenção) | `carlos@teste.com` | `123456` |
 
 ---
 
-## 7. A história: um dia na vida do sistema
-
-Para entender tudo isso na prática, imagine três colegas de trabalho:
+## 8. A história: um dia na vida do sistema
 
 - **João**, do time de **TI**, é quem faz os pedidos.
-- **Ana**, do **RH**, é quem aprova ou recusa os pedidos do setor dela.
-- **Carlos**, da **Manutenção**, é quem coloca a mão na massa e resolve o que foi aprovado.
+- **Ana** aprova todos os chamados, de qualquer setor.
+- **Carlos**, da **Manutenção**, executa o que é aprovado nas categorias técnicas.
 
 ### Capítulo 1 — A cadeira quebrada
 
-João chega ao trabalho e percebe que sua cadeira está com um problema sério no encosto. Ele abre o sistema e registra um chamado: *"Cadeira quebrada, preciso de uma nova, prioridade alta"*. Nos bastidores, o sistema já sabe, pela categoria escolhida, que quem precisa dar o aval é alguém do RH — e encontra a Ana automaticamente.
-
-Ana recebe o chamado na fila dela. Ela olha os detalhes e decide aprovar. Na hora, o sistema registra essa decisão para sempre no histórico do chamado, e dispara um aviso pro João: *"Sua solicitação foi aprovada"*.
-
-Carlos, da manutenção, vê que tem um chamado aprovado esperando alguém pegar — ele nem precisa procurar, a fila dele já mostra só isso. Ele deixa um comentário avisando: *"Vou providenciar amanhã de manhã"*, e assume o chamado — o status muda para "em execução".
-
-No dia seguinte, Carlos troca a cadeira, tira uma foto e anexa ao chamado como comprovante. Em seguida, marca o trabalho como concluído.
-
-João recebe o aviso, confere que a cadeira nova está lá, e fecha o chamado de vez. Fim feliz — e tudo o que aconteceu, do início ao fim, ficou guardado no histórico daquele chamado, como um diário completo.
+João abre um chamado. O sistema descobre sozinho, pela categoria, quem precisa aprovar. Ana aprova, Carlos assume, resolve, anexa uma foto como comprovante, marca como concluído. João fecha. Tudo registrado no histórico.
 
 ### Capítulo 2 — O computador que não liga mais
 
-Duas semanas depois, o computador de João simplesmente não liga mais. Ele abre um novo chamado: *"Computador queimou, preciso de um computador novo, prioridade alta"*.
-
-Dessa vez, Ana olha o pedido e vê que não tem verba disponível naquele momento. Ela recusa o chamado, e o sistema exige que ela escreva o motivo: *"Fora do orçamento no momento"*. João recebe a notificação explicando exatamente por que seu pedido não foi pra frente.
+Ana recusa por falta de verba, com motivo obrigatório registrado. João entende exatamente por quê.
 
 ### Capítulo 3 — O teclado (e o mouse desconectado)
 
-Mais tarde, João percebe que algumas teclas do teclado não respondem. Ele abre um chamado: *"Teclado com defeito, algumas teclas não funcionam"*.
-
-Só que, minutos depois, ele descobre que na verdade era só o **mouse** que estava desconectado. Como o chamado ainda está esperando aprovação, João consegue simplesmente cancelar antes que a Ana perca tempo avaliando algo desnecessário.
+João cancela um chamado antes de alguém perder tempo avaliando algo que já não era mais problema.
 
 ### Capítulo 4 — O chamado esquecido
 
-Num fim de semana prolongado, um chamado de prioridade baixa fica parado na fila da Ana por dias sem ninguém notar. Só que o sistema não esquece: passadas as 24 horas de prazo, ele mesmo percebe o atraso, marca o chamado como "SLA estourado" e avisa a Ana automaticamente.
+Um chamado de baixa prioridade passa das 24 horas sem resposta. O sistema percebe sozinho, marca como atrasado, avisa a Ana.
 
 ### Capítulo 5 — Uma cópia idêntica em qualquer computador
 
-Um colega de trabalho quer ver o sistema funcionando na própria máquina dele, sem instalar PHP, Python ou Node um por um. Ele só precisa do Docker instalado. Com `docker compose up --build`, o banco de dados, a API, o serviço de relatórios e o front-end sobem juntos, exatamente como foram descritos em código — sem nenhuma instalação manual, sem "na minha máquina funciona".
+Um colega sobe o projeto inteiro com `docker compose up --build`, sem instalar nada manualmente.
+
+### Capítulo 6 — O computador que não liga (dessa vez, sem seletor nenhum)
+
+João não escolhe mais categoria nem prioridade — só escreve "Notebook não liga, tenho apresentação em 30 minutos". O sistema lê o texto, reconhece o assunto (Hardware) com confiança alta, já preenche a prioridade como alta, e manda direto pra fila da Ana — sem ele precisar pensar em qual caixinha marcar.
+
+### Capítulo 7 — "Isso aqui não está funcionando direito"
+
+Outro colaborador escreve um chamado vago demais pra qualquer IA adivinhar o assunto. O sistema reconhece a própria incerteza — em vez de arriscar um palpite, manda pra fila de triagem manual da Ana, que decide com um clique. Nenhuma decisão automática ruim chega a se tornar aprovação.
 
 ---
 
-Essa é a espinha dorsal do sistema: cada ação de cada personagem vira uma chamada de API, cada chamada vira uma linha no histórico, o sistema cobra a si mesmo quando algo demora demais, e o ambiente inteiro pode ser reproduzido de forma idêntica em qualquer máquina.
+Essa é a espinha dorsal do sistema: cada ação vira uma chamada de API, cada chamada vira uma linha no histórico, o sistema cobra a si mesmo quando algo demora demais, tenta classificar sozinho o que consegue e pede ajuda quando não tem certeza — e o ambiente inteiro é reproduzível em qualquer máquina.

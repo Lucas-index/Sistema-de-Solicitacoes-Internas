@@ -11,11 +11,15 @@ export default function ChamadoDetalhe() {
   const { id } = useParams();
   const { user } = useAuth();
   const [chamado, setChamado] = useState(null);
+  const [categorias, setCategorias] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const [acaoEmAndamento, setAcaoEmAndamento] = useState(false);
   const [motivoRejeicao, setMotivoRejeicao] = useState('');
   const [mostrarRejeicao, setMostrarRejeicao] = useState(false);
+  const [mostrarCorrecao, setMostrarCorrecao] = useState(false);
+  const [categoriaCorrigida, setCategoriaCorrigida] = useState('');
+  const [prioridadeCorrigida, setPrioridadeCorrigida] = useState('media');
   const [novoComentario, setNovoComentario] = useState('');
   const [arquivo, setArquivo] = useState(null);
 
@@ -32,6 +36,12 @@ export default function ChamadoDetalhe() {
     carregar();
   }, [carregar]);
 
+  useEffect(() => {
+    if (user.papel === 'aprovador' || user.papel === 'admin') {
+      api.get('/categorias').then(({ data }) => setCategorias(data));
+    }
+  }, [user.papel]);
+
   async function executarAcao(acao, body) {
     setAcaoEmAndamento(true);
     setErro('');
@@ -40,6 +50,7 @@ export default function ChamadoDetalhe() {
       carregar();
       setMostrarRejeicao(false);
       setMotivoRejeicao('');
+      setMostrarCorrecao(false);
     } catch (err) {
       setErro('Não foi possível concluir essa ação.');
     } finally {
@@ -87,6 +98,7 @@ export default function ChamadoDetalhe() {
 
   const ehDono = chamado.usuario_id === user.id;
   const ehAprovadorDesteChamado = chamado.aprovador_id === user.id;
+  const ehAprovadorOuAdmin = user.papel === 'aprovador' || user.papel === 'admin';
 
   const podeAprovarOuRejeitar =
     chamado.status === 'pendente_aprovacao' && (ehAprovadorDesteChamado || user.papel === 'admin');
@@ -97,9 +109,14 @@ export default function ChamadoDetalhe() {
   const podeConcluir =
     chamado.status === 'em_execucao' && (chamado.executor_id === user.id || user.papel === 'admin');
 
-  const podeCancelar = ['criada', 'pendente_aprovacao'].includes(chamado.status) && ehDono;
+  const podeCancelar = ['criada', 'em_classificacao', 'pendente_aprovacao'].includes(chamado.status) && ehDono;
 
   const podeFechar = chamado.status === 'concluida' && ehDono;
+
+  const podeCorrigirClassificacao =
+    ehAprovadorOuAdmin && ['aguardando_classificacao_manual', 'pendente_aprovacao'].includes(chamado.status);
+
+  const ultimaPredicao = chamado.predicoes?.[chamado.predicoes.length - 1];
 
   return (
     <div className="pagina">
@@ -107,14 +124,32 @@ export default function ChamadoDetalhe() {
         <div>
           <h1>{chamado.titulo}</h1>
           <p className="chamado-meta">
-            Aberto por {chamado.usuario?.name} · Categoria {chamado.categoria?.nome} · Prioridade{' '}
-            {PRIORIDADE_LABELS[chamado.prioridade]}
+            Aberto por {chamado.usuario?.name}
+            {chamado.categoria && ` · Categoria ${chamado.categoria.nome}`}
+            {chamado.prioridade && ` · Prioridade ${PRIORIDADE_LABELS[chamado.prioridade]}`}
           </p>
         </div>
         <StatusBadge status={chamado.status} />
       </div>
 
       <p className="chamado-descricao-completa">{chamado.descricao}</p>
+
+      {ultimaPredicao && (
+        <div className="caixa-predicao">
+          <p className="predicao-titulo">Classificação automática (IA)</p>
+          <p className="predicao-linha">
+            Categoria sugerida: <strong>{ultimaPredicao.predicted_category}</strong> (
+            {Math.round(ultimaPredicao.category_confidence * 100)}% de confiança)
+          </p>
+          <p className="predicao-linha">
+            Prioridade sugerida: <strong>{PRIORIDADE_LABELS[ultimaPredicao.predicted_priority] || ultimaPredicao.predicted_priority}</strong> (
+            {Math.round(ultimaPredicao.priority_confidence * 100)}% de confiança)
+          </p>
+          {chamado.classificacao_manual === 1 && (
+            <p className="predicao-linha predicao-corrigida">Classificação foi corrigida manualmente.</p>
+          )}
+        </div>
+      )}
 
       {erro && <p className="erro">{erro}</p>}
 
@@ -157,6 +192,16 @@ export default function ChamadoDetalhe() {
             Cancelar chamado
           </button>
         )}
+
+        {podeCorrigirClassificacao && (
+          <button
+            disabled={acaoEmAndamento}
+            className="botao-secundario"
+            onClick={() => setMostrarCorrecao((v) => !v)}
+          >
+            Corrigir classificação
+          </button>
+        )}
       </div>
 
       {mostrarRejeicao && (
@@ -178,6 +223,40 @@ export default function ChamadoDetalhe() {
           </label>
           <button type="submit" disabled={acaoEmAndamento}>
             Confirmar rejeição
+          </button>
+        </form>
+      )}
+
+      {mostrarCorrecao && (
+        <form
+          className="formulario-rejeicao"
+          onSubmit={(e) => {
+            e.preventDefault();
+            executarAcao('corrigir-classificacao', {
+              categoria_id: Number(categoriaCorrigida),
+              prioridade: prioridadeCorrigida,
+            });
+          }}
+        >
+          <label>
+            Categoria correta
+            <select value={categoriaCorrigida} onChange={(e) => setCategoriaCorrigida(e.target.value)} required>
+              <option value="" disabled>Selecione</option>
+              {categorias.map((c) => (
+                <option key={c.id} value={c.id}>{c.nome}</option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Prioridade correta
+            <select value={prioridadeCorrigida} onChange={(e) => setPrioridadeCorrigida(e.target.value)}>
+              <option value="baixa">Baixa</option>
+              <option value="media">Média</option>
+              <option value="alta">Alta</option>
+            </select>
+          </label>
+          <button type="submit" disabled={acaoEmAndamento || !categoriaCorrigida}>
+            Confirmar correção
           </button>
         </form>
       )}

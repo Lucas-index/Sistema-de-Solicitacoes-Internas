@@ -21,4 +21,6 @@ public function executor() { return $this->belongsTo(User::class, 'executor_id')
 public function historico() { return $this->hasMany(HistoricoStatus::class); }
 public function comentarios() { return $this->hasMany(Comentario::class); }
 public function anexos() { return $this->hasMany(Anexo::class); }
+public function predicoes() { return $this->hasMany(TicketPrediction::class); }
+public function correcoes() { return $this->hasMany(TicketCorrection::class); }
 }

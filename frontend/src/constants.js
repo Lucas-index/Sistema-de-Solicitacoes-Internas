@@ -7,6 +7,10 @@ export const STATUS_LABELS = {
   concluida: 'Concluída',
   cancelada: 'Cancelada',
   fechada: 'Fechada',
+  criada: 'Criada',
+  em_classificacao: 'Classificando...',
+  aguardando_classificacao_manual: 'Triagem manual',
+  pendente_aprovacao: 'Aguardando aprovação',
 };
 
 export const STATUS_TONE = {
@@ -18,6 +22,9 @@ export const STATUS_TONE = {
   concluida: 'positivo',
   cancelada: 'negativo',
   fechada: 'neutro',
+  criada: 'neutro',
+  em_classificacao: 'neutro',
+  aguardando_classificacao_manual: 'atencao',
 };
 
 export const PRIORIDADE_LABELS = {

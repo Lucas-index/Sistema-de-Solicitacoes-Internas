@@ -151,11 +151,10 @@ private function classificarChamado(Solicitacao $solicitacao): void
             'processing_time_ms' => $predicao['processing_time_ms'],
         ]);
 
-        $confiancaMinima = min($predicao['category_confidence'], $predicao['priority_confidence']);
+        $confiancaCategoria = $predicao['category_confidence'];
 
-        if ($categoria && $confiancaMinima >= 0.70) {
-            $aprovador = User::where('setor_id', $categoria->setor_responsavel_id)
-                ->where('papel', 'aprovador')->first();
+        if ($categoria && $confiancaCategoria >= 0.55) {
+            $aprovador = User::where('papel', 'aprovador')->first();
 
             $statusAnterior = $solicitacao->status;
             $solicitacao->update([
@@ -171,7 +170,7 @@ private function classificarChamado(Solicitacao $solicitacao): void
                 'status_anterior' => $statusAnterior,
                 'status_novo' => 'pendente_aprovacao',
                 'usuario_id' => $solicitacao->usuario_id,
-                'observacao' => "Classificado automaticamente: {$predicao['category']} / {$predicao['priority']} (confiança " . round($confiancaMinima, 2) . ")",
+                'observacao' => "Classificado automaticamente: {$predicao['category']} / {$predicao['priority']} (confiança " . round($confiancaCategoria, 2) . ")",
             ]);
         } else {
             $statusAnterior = $solicitacao->status;
@@ -204,9 +203,9 @@ private function classificarChamado(Solicitacao $solicitacao): void
 }
 
     public function show(Solicitacao $solicitacao)
-    {
-        return $solicitacao->load('categoria', 'usuario', 'aprovador', 'executor', 'historico', 'comentarios', 'anexos');
-    }
+{
+    return $solicitacao->load('categoria', 'usuario', 'aprovador', 'executor', 'historico', 'comentarios', 'anexos', 'predicoes', 'correcoes');
+}
 
     public function aprovar(Request $request, Solicitacao $solicitacao)
 {
@@ -214,17 +213,26 @@ private function classificarChamado(Solicitacao $solicitacao): void
 
     return DB::transaction(function () use ($request, $solicitacao) {
         $statusAnterior = $solicitacao->status;
-        $solicitacao->update(['status' => 'aprovada']);
+        $categoria = $solicitacao->categoria;
+        $resolvidoNaAprovacao = $categoria?->setorResponsavel?->nome === 'RH';
+
+        $novoStatus = $resolvidoNaAprovacao ? 'concluida' : 'aprovada';
+
+        $solicitacao->update(['status' => $novoStatus]);
 
         HistoricoStatus::create([
-    'solicitacao_id' => $solicitacao->id,
-    'status_anterior' => $statusAnterior,
-    'status_novo' => 'aguardando_classificacao_manual',
-    'usuario_id' => $solicitacao->usuario_id,
-    'observacao' => 'Serviço de classificação indisponível, encaminhado para triagem manual.',
-]);
+            'solicitacao_id' => $solicitacao->id,
+            'status_anterior' => $statusAnterior,
+            'status_novo' => $novoStatus,
+            'usuario_id' => $request->user()->id,
+            'observacao' => $resolvidoNaAprovacao ? 'Resolvido diretamente pelo RH na aprovação.' : null,
+        ]);
 
-        $this->notificar($solicitacao->usuario_id, "Sua solicitação #{$solicitacao->id} foi aprovada.");
+        $mensagem = $resolvidoNaAprovacao
+            ? "Sua solicitação #{$solicitacao->id} foi aprovada e já resolvida pelo RH."
+            : "Sua solicitação #{$solicitacao->id} foi aprovada.";
+
+        $this->notificar($solicitacao->usuario_id, $mensagem);
 
         return $solicitacao->fresh();
     });
@@ -330,6 +338,52 @@ private function classificarChamado(Solicitacao $solicitacao): void
 
         return $solicitacao->fresh();
     }
+
+    public function triagemManual(Request $request)
+{
+    abort_unless(
+        in_array($request->user()->papel, ['aprovador', 'admin']),
+        403,
+        'Apenas aprovadores podem ver a triagem manual.'
+    );
+
+    return Solicitacao::with(['usuario'])
+        ->where('status', 'aguardando_classificacao_manual')
+        ->latest()
+        ->get();
+}
+
+public function qualidadeClassificacao(Request $request)
+{
+    abort_unless(
+        in_array($request->user()->papel, ['aprovador', 'admin']),
+        403,
+        'Apenas aprovadores podem ver esses dados.'
+    );
+
+    return [
+        'total_classificados' => Solicitacao::whereNotNull('model_version')->count(),
+        'total_automatico' => Solicitacao::whereNotNull('model_version')->where('classificacao_manual', false)->count(),
+        'total_aguardando_manual' => Solicitacao::where('status', 'aguardando_classificacao_manual')->count(),
+        'total_correcoes' => TicketCorrection::count(),
+        'confianca_media_categoria' => round(TicketPrediction::avg('category_confidence') ?? 0, 3),
+        'confianca_media_prioridade' => round(TicketPrediction::avg('priority_confidence') ?? 0, 3),
+    ];
+}
+
+public function correcoesRecentes(Request $request)
+{
+    abort_unless(
+        in_array($request->user()->papel, ['aprovador', 'admin']),
+        403,
+        'Apenas aprovadores podem ver esses dados.'
+    );
+
+    return TicketCorrection::with(['solicitacao:id,titulo', 'corretor:id,name'])
+        ->latest()
+        ->limit(20)
+        ->get();
+}
 
     private function notificar(?int $usuarioId, string $mensagem): void
     {
