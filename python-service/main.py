@@ -1,3 +1,5 @@
+import glob
+import json
 import time
 import joblib
 from pydantic import BaseModel
@@ -220,6 +222,50 @@ def matriz_confusao(x_api_key: str = Header(...)):
             "accuracy": metrics["prioridade"]["accuracy"],
         },
     }
+
+import glob
+from pydantic import BaseModel as PydanticBaseModel
+
+class AtivarModeloRequest(PydanticBaseModel):
+    versao: str
+
+@app.get("/modelo/versoes")
+def listar_versoes(x_api_key: str = Header(...)):
+    verificar_api_key(x_api_key)
+
+    versoes = []
+    for pasta in sorted(glob.glob("modelo/ticket-classifier-*"), reverse=True):
+        metrics_path = f"{pasta}/metrics.json"
+        if os.path.exists(metrics_path):
+            with open(metrics_path, "r", encoding="utf-8") as f:
+                m = json.load(f)
+            versoes.append({
+                "versao": m["model_version"],
+                "trained_at": m["trained_at"],
+                "dataset_size": m["dataset_size"],
+                "correcoes_incluidas": m.get("correcoes_incluidas", 0),
+                "accuracy_categoria": round(m["categoria"]["accuracy"], 3),
+                "accuracy_prioridade": round(m["prioridade"]["accuracy"], 3),
+                "ativa": m["model_version"] == MODEL_VERSION,
+            })
+    return versoes
+
+
+@app.patch("/modelo/ativar")
+def ativar_modelo(dados: AtivarModeloRequest, x_api_key: str = Header(...)):
+    verificar_api_key(x_api_key)
+
+    global MODEL_VERSION, vectorizer, modelo_categoria, modelo_prioridade
+
+    pasta = f"modelo/{dados.versao}"
+    if not os.path.exists(pasta):
+        raise HTTPException(status_code=404, detail=f"Versão '{dados.versao}' não encontrada.")
+    vectorizer = joblib.load(f"{pasta}/vectorizer.joblib")
+    modelo_categoria = joblib.load(f"{pasta}/categoria_modelo.joblib")
+    modelo_prioridade = joblib.load(f"{pasta}/prioridade_modelo.joblib")
+    MODEL_VERSION = dados.versao
+
+    return {"ativo": MODEL_VERSION, "mensagem": f"Modelo '{MODEL_VERSION}' ativado com sucesso."}
 
 
 @app.post("/classificar")

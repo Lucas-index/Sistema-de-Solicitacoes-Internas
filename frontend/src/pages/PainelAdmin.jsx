@@ -65,6 +65,7 @@ export default function PainelAdmin() {
   const [tempoMedio, setTempoMedio] = useState([]);
   const [volume, setVolume] = useState([]);
   const [recorrencia, setRecorrencia] = useState([]);
+  const [versoes, setVersoes] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const { filtros: filtrosMonitor, setFiltros: setFiltrosMonitor, chamadosFiltrados: chamadosMonitor } = useFiltros(chamados);
@@ -83,8 +84,9 @@ export default function PainelAdmin() {
       pythonApi.get('/relatorios/volume'),
       pythonApi.get('/relatorios/recorrencia'),
       pythonApi.get('/relatorios/matriz-confusao'),
+      pythonApi.get('/modelo/versoes'),
     ])
-      .then(([res1, res2, res3, res4, res5, res6, res7, res8, res9]) => {
+      .then(([res1, res2, res3, res4, res5, res6, res7, res8, res9, res10]) => {
         setChamados(res1.data.data || res1.data);
         setSlaEstourado(res2.data);
         setTriagemManual(res3.data);
@@ -94,6 +96,7 @@ export default function PainelAdmin() {
         setVolume(res7.data);
         setRecorrencia(res8.data);
         setMatrizConfusao(res9.data);
+        setVersoes(res10.data);
       })
       .catch(() =>
         setErro(
@@ -146,6 +149,9 @@ export default function PainelAdmin() {
         </button>
         <button className={aba === 'relatorios' ? 'ativo' : ''} onClick={() => setAba('relatorios')}>
           Relatórios
+        </button>
+        <button className={aba === 'modelos' ? 'ativo' : ''} onClick={() => setAba('modelos')}>
+          Versões do modelo
         </button>
       </div>
 
@@ -353,6 +359,68 @@ export default function PainelAdmin() {
                     <td>{r.item}</td>
                     <td>{r.ocorrencias}</td>
                     <td>{r.media_dias_entre_ocorrencias} dias</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {!carregando && aba === 'modelos' && (
+        <div className="relatorios">
+          <div className="relatorio-bloco">
+            <h2>Versões treinadas</h2>
+            <p className="pagina-subtitulo">
+              A versão ativa é usada para classificar todos os chamados novos.
+              Ative uma nova versão só após revisar as métricas.
+            </p>
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Versão</th>
+                  <th>Treinado em</th>
+                  <th>Exemplos</th>
+                  <th>Correções</th>
+                  <th>Acc. Categoria</th>
+                  <th>Acc. Prioridade</th>
+                  <th>Ação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {versoes.map((v) => (
+                  <tr key={v.versao}>
+                    <td>
+                      {v.versao}
+                      {v.ativa && (
+                        <span style={{
+                          marginLeft: 8, fontSize: '0.7rem', background: 'rgba(107,158,120,0.2)',
+                          color: '#6b9e78', padding: '2px 8px', borderRadius: 999,
+                        }}>
+                          ativa
+                        </span>
+                      )}
+                    </td>
+                    <td style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                      {new Date(v.trained_at).toLocaleString('pt-BR')}
+                    </td>
+                    <td>{v.dataset_size}</td>
+                    <td>{v.correcoes_incluidas}</td>
+                    <td>{Math.round(v.accuracy_categoria * 100)}%</td>
+                    <td>{Math.round(v.accuracy_prioridade * 100)}%</td>
+                    <td>
+                      {!v.ativa && (
+                        <button
+                          style={{ padding: '5px 12px', fontSize: '0.8rem' }}
+                          onClick={async () => {
+                            await pythonApi.patch('/modelo/ativar', { versao: v.versao });
+                            window.location.reload();
+                          }}
+                        >
+                          Ativar
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
