@@ -197,6 +197,30 @@ def exportar_excel(x_api_key: str = Header(...)):
         headers={"Content-Disposition": "attachment; filename=relatorio_solicitacoes.xlsx"},
     )
 
+@app.get("/relatorios/matriz-confusao")
+def matriz_confusao(x_api_key: str = Header(...)):
+    verificar_api_key(x_api_key)
+
+    import json
+    with open("modelo/metrics.json", "r", encoding="utf-8") as f:
+        metrics = json.load(f)
+
+    return {
+        "model_version": metrics["model_version"],
+        "trained_at": metrics["trained_at"],
+        "dataset_size": metrics["dataset_size"],
+        "categoria": {
+            "classes": metrics["categoria"]["classes"],
+            "confusion_matrix": metrics["categoria"]["confusion_matrix"],
+            "accuracy": metrics["categoria"]["accuracy"],
+        },
+        "prioridade": {
+            "classes": metrics["prioridade"]["classes"],
+            "confusion_matrix": metrics["prioridade"]["confusion_matrix"],
+            "accuracy": metrics["prioridade"]["accuracy"],
+        },
+    }
+
 
 @app.post("/classificar")
 def classificar(dados: ChamadoParaClassificar, x_api_key: str = Header(...)):

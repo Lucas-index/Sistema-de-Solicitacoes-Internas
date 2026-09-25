@@ -694,3 +694,15 @@ label {
   width: auto;
   flex-shrink: 0;
 }
+
+.tabela-matriz th,
+.tabela-matriz td {
+  min-width: 60px;
+  padding: 8px 6px;
+}
+
+.tabela-matriz thead th {
+  background: var(--surface-alt);
+  color: var(--text-muted);
+  font-weight: 500;
+}

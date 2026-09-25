@@ -4,6 +4,57 @@ import ChamadoCard from '../components/ChamadoCard';
 import FiltrosChamados from '../components/FiltrosChamados';
 import { useFiltros } from '../hooks/useFiltros';
 
+function MatrizConfusao({ classes, matriz }) {
+  const maxValor = Math.max(...matriz.flat());
+  return (
+    <div style={{ overflowX: 'auto' }}>
+      <table className="tabela tabela-matriz">
+        <thead>
+          <tr>
+            <th style={{ background: 'transparent', border: 'none' }}></th>
+            {classes.map((c) => (
+              <th key={c} style={{ textAlign: 'center' }}>
+                <span style={{ fontSize: '0.75rem' }}>{c}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {matriz.map((linha, i) => (
+            <tr key={i}>
+              <td style={{ fontWeight: 600, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+                {classes[i]}
+              </td>
+              {linha.map((valor, j) => {
+                const isDiagonal = i === j;
+                const intensidade = maxValor > 0 ? valor / maxValor : 0;
+                const bg = isDiagonal
+                  ? `rgba(107, 158, 120, ${0.15 + intensidade * 0.6})`
+                  : valor > 0
+                  ? `rgba(180, 97, 95, ${0.1 + intensidade * 0.5})`
+                  : 'transparent';
+                return (
+                  <td
+                    key={j}
+                    style={{
+                      textAlign: 'center',
+                      background: bg,
+                      fontWeight: isDiagonal ? 600 : 400,
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    {valor}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function PainelAdmin() {
   const [aba, setAba] = useState('aprovacoes');
   const [chamados, setChamados] = useState([]);
@@ -17,6 +68,7 @@ export default function PainelAdmin() {
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState('');
   const { filtros: filtrosMonitor, setFiltros: setFiltrosMonitor, chamadosFiltrados: chamadosMonitor } = useFiltros(chamados);
+  const [matrizConfusao, setMatrizConfusao] = useState(null);
 
   useEffect(() => {
     setCarregando(true);
@@ -30,8 +82,9 @@ export default function PainelAdmin() {
       pythonApi.get('/relatorios/tempo-medio'),
       pythonApi.get('/relatorios/volume'),
       pythonApi.get('/relatorios/recorrencia'),
+      pythonApi.get('/relatorios/matriz-confusao'),
     ])
-      .then(([res1, res2, res3, res4, res5, res6, res7, res8]) => {
+      .then(([res1, res2, res3, res4, res5, res6, res7, res8, res9]) => {
         setChamados(res1.data.data || res1.data);
         setSlaEstourado(res2.data);
         setTriagemManual(res3.data);
@@ -40,6 +93,7 @@ export default function PainelAdmin() {
         setTempoMedio(res6.data);
         setVolume(res7.data);
         setRecorrencia(res8.data);
+        setMatrizConfusao(res9.data);
       })
       .catch(() =>
         setErro(
@@ -87,6 +141,9 @@ export default function PainelAdmin() {
         <button className={aba === 'qualidade' ? 'ativo' : ''} onClick={() => setAba('qualidade')}>
           Qualidade da IA
         </button>
+        <button className={aba === 'matriz' ? 'ativo' : ''} onClick={() => setAba('matriz')}>
+          Onde o modelo erra
+        </button>
         <button className={aba === 'relatorios' ? 'ativo' : ''} onClick={() => setAba('relatorios')}>
           Relatórios
         </button>
@@ -116,16 +173,16 @@ export default function PainelAdmin() {
       )}
 
       {!carregando && aba === 'monitoramento' && (
-  <div>
-    <FiltrosChamados filtros={filtrosMonitor} onChange={setFiltrosMonitor} />
-    <div className="chamados-grade" style={{ marginTop: 16 }}>
-      {chamadosMonitor.length === 0 && <p className="vazio">Nenhum chamado encontrado.</p>}
-      {chamadosMonitor.map((c) => (
-        <ChamadoCard key={c.id} chamado={c} />
-      ))}
-    </div>
-  </div>
-)}
+        <div>
+          <FiltrosChamados filtros={filtrosMonitor} onChange={setFiltrosMonitor} />
+          <div className="chamados-grade" style={{ marginTop: 16 }}>
+            {chamadosMonitor.length === 0 && <p className="vazio">Nenhum chamado encontrado.</p>}
+            {chamadosMonitor.map((c) => (
+              <ChamadoCard key={c.id} chamado={c} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {!carregando && aba === 'sla' && (
         <div className="chamados-grade">
@@ -194,6 +251,32 @@ export default function PainelAdmin() {
                 </tbody>
               </table>
             )}
+          </div>
+        </div>
+      )}
+
+      {!carregando && aba === 'matriz' && matrizConfusao && (
+        <div className="relatorios">
+          <div className="relatorio-bloco">
+            <h2>Matriz de confusão — Categoria</h2>
+            <p className="pagina-subtitulo">
+              Precisão: {Math.round(matrizConfusao.categoria.accuracy * 100)}%
+            </p>
+            <MatrizConfusao
+              classes={matrizConfusao.categoria.classes}
+              matriz={matrizConfusao.categoria.confusion_matrix}
+            />
+          </div>
+
+          <div className="relatorio-bloco">
+            <h2>Matriz de confusão — Prioridade</h2>
+            <p className="pagina-subtitulo">
+              Precisão: {Math.round(matrizConfusao.prioridade.accuracy * 100)}%
+            </p>
+            <MatrizConfusao
+              classes={matrizConfusao.prioridade.classes}
+              matriz={matrizConfusao.prioridade.confusion_matrix}
+            />
           </div>
         </div>
       )}

@@ -26,6 +26,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import confusion_matrix
 
 MODEL_VERSION = "ticket-classifier-v1"
 PASTA_MODELO = "modelo"
@@ -76,6 +77,12 @@ relatorio_categoria = classification_report(y_cat_test, pred_categoria, output_d
 print("\nRelatório de categoria (modelo escolhido: " + algoritmo_categoria + "):")
 print(classification_report(y_cat_test, pred_categoria))
 
+matriz_categoria = confusion_matrix(
+    y_cat_test,
+    pred_categoria,
+    labels=list(modelo_categoria.classes_)
+).tolist()
+
 # --- Prioridade: mesmo processo ---
 modelo_pri_lr = LogisticRegression(max_iter=1000, C=150)
 modelo_pri_lr.fit(X_train_vec, y_pri_train)
@@ -103,6 +110,12 @@ relatorio_prioridade = classification_report(y_pri_test, pred_prioridade, output
 print("\nRelatório de prioridade (modelo escolhido: " + algoritmo_prioridade + "):")
 print(classification_report(y_pri_test, pred_prioridade))
 
+matriz_prioridade = confusion_matrix(
+    y_pri_test,
+    pred_prioridade,
+    labels=list(modelo_prioridade.classes_)
+).tolist()
+
 # --- Salvar artefatos ---
 joblib.dump(vectorizer, f"{PASTA_MODELO}/vectorizer.joblib")
 joblib.dump(modelo_categoria, f"{PASTA_MODELO}/categoria_modelo.joblib")
@@ -115,11 +128,15 @@ metrics = {
     "categoria": {
         "algorithm": algoritmo_categoria,
         "accuracy": acc_cat_lr if algoritmo_categoria == "LogisticRegression" else acc_cat_nb,
+        "classes": list(modelo_categoria.classes_),
+        "confusion_matrix": matriz_categoria,
         "report": relatorio_categoria,
     },
     "prioridade": {
         "algorithm": algoritmo_prioridade,
         "accuracy": acc_pri_lr if algoritmo_prioridade == "LogisticRegression" else acc_pri_nb,
+        "classes": list(modelo_prioridade.classes_),
+        "confusion_matrix": matriz_prioridade,
         "report": relatorio_prioridade,
     },
 }
